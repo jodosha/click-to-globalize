@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>ClickToGlobalize Unit test file</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <script src="../../../../../public/javascripts/prototype.js" type="text/javascript"></script>
+  <script src="../../../../../public/javascripts/effects.js" type="text/javascript"></script>
+  <script src="../../../../../public/javascripts/controls.js" type="text/javascript"></script>
+  <script src="../../../../../public/javascripts/click_to_globalize.js" type="text/javascript"></script>
+  <script src="../lib/unittest.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="../test.css" type="text/css" />
+  <style type="text/css" media="screen">
+  /* <![CDATA[ */
+    #testcss1 { font-size:11px; color: #f00; }
+    #testcss2 { font-size:12px; color: #0f0; display: none; }
+  /* ]]> */
+  </style>
+</head>
+<body>
+<h1>ClickToGlobalize Unit test file</h1>
+<p>
+  Test ClickToGlobalize.
+</p>
+  
+  <!-- Fixtures -->
+  <div id="fixtures" style="display:none;">
+    <p id="paragraph">Hello World</p>
+    <p id="paragraph2">paragraph text</p>
+    <p id="paragraph3">paragraph no. three</p>
+  </div>
+  
+<!-- Log output -->
+<div id="testlog"> </div>
+
+<!-- Tests follow -->
+<script type="text/javascript" language="javascript" charset="utf-8">
+// <![CDATA[
+
+  var TestUtil = {
+    DefaultOptions: {
+  	  translateUrl:             '/locale/translate',
+  	  translateUnformattedUrl:  '/locale/translate_unformatted',
+  	  translationsUrl:          '/locale/translations',
+  	  httpMethod:               'post',
+  	  asynchronous:              true,
+  	  textileElements:  [ 'a', 'acronym', 'blockquote', 'bold', 'cite', 'code',
+  	                      'del', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'i',
+  	                      'img', 'ins', 'span', 'strong', 'sub', 'sup', 'table',
+  	                    ].collect(function(element){return element.toUpperCase();}),
+  	  textArea:          {rows: 5, cols: 40},
+  	  inputText:         {rows: 1, cols: 20},
+  	  textLength:        160,
+  	  clickToEditText:   'Click to globalize'
+    },
+    resetDefaultOptions: function(){
+      ClickToGlobalize.DefaultOptions = this.DefaultOptions;
+    }
+  };
+
+  new Test.Unit.Runner({
+    setup: function() {
+      authenticityToken = '45c0a7bf277d5e40d490438f41a67069e5334d96';
+      requestForgeryProtectionToken = 'authenticity_token';
+      clickToGlobalize  = new ClickToGlobalize(authenticityToken, requestForgeryProtectionToken, 
+        {translationsUrl: 'fixtures/translations.json'});
+      document.fire("dom:loaded");
+    },
+    testRespondTo: function() {
+      this.assertRespondsTo('initialize',      clickToGlobalize);
+      this.assertRespondsTo('createEditors',   clickToGlobalize);
+      this.assertRespondsTo('getTranslations', clickToGlobalize);
+      this.assertRespondsTo('bindEditor',      clickToGlobalize);      
+      this.assertRespondsTo('unbindEditor',    clickToGlobalize);
+    },
+    testOptions: function() {
+      TestUtil.resetDefaultOptions();
+      this.assertHashEqual(TestUtil.DefaultOptions, ClickToGlobalize.DefaultOptions);
+    },
+    testInitialize: function(){
+      TestUtil.resetDefaultOptions();
+      this.assertEqual(authenticityToken, clickToGlobalize.authenticityToken);
+      this.assertEqual(requestForgeryProtectionToken, clickToGlobalize.requestForgeryProtectionToken);
+      this.assertHashEqual(TestUtil.DefaultOptions, clickToGlobalize.options);
+    },
+    testGetTranslations: function() {
+      this.assertHashEqual({hello_world: 'Hello World'}, clickToGlobalize.translations);
+    },
+    testCreateEditors: function() {
+      this.assertEqual(TestUtil.DefaultOptions.clickToEditText, $('paragraph').getAttribute('title'));
+    },
+    testBindEditor: function() {
+      clickToGlobalize.bindEditor($('paragraph2'), 'paragraph_text', 'paragraph text');
+      this.assertEqual(TestUtil.DefaultOptions.clickToEditText, $('paragraph2').getAttribute('title'));
+    },
+    testUnbindEditor: function() {
+      element = $('paragraph3');
+      ipe = new Ajax.InPlaceEditor(element, TestUtil.DefaultOptions.clickToEditText, {});
+      clickToGlobalize.unbindEditor(element, ipe);
+      Event.simulateMouse('paragraph3','click');
+      this.assertNullOrUndefined(ipe._form);
+    },
+    testProtectFromForgeryTokenParameter: function(){
+      this.assertEqual('?'+requestForgeryProtectionToken+'='+authenticityToken,
+        clickToGlobalize.protectFromForgeryTokenParameter('?'));
+      this.assertEqual('', (new ClickToGlobalize('', '')).protectFromForgeryTokenParameter());
+    }
+  }, "testlog");
+// ]]>
+</script>
+</body>
+</html>
