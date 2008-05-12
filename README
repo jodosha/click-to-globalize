@@ -1,7 +1,7 @@
 ClickToGlobalize
-=================
+================
 
-ClickToGlobalize is an extension for Globalize plugin, it allows to edit in
+Click to Globalize is an extension for Globalize plugin, it allows to edit in
 place globalized labels. With this plugin you don't have to create a
 globalization back-end, but just edit your interface in place!!
 
@@ -21,7 +21,7 @@ Getting Started
 1. Install Globalize[http://www.globalize-rails.org/].
 
 2. Install Click To Globalize:
-   $ ./scripts/plugin install http://dev.23labs.net/svn/rails/plugins/click_to_globalize/trunk
+   $ ./scripts/plugin install git://github.com/jodosha/click-to-globalize.git
 
 3. Add at the end of your layout the following code:
    <%= click_to_globalize -%>
@@ -46,10 +46,12 @@ Install
 1. Install Globalize, if you don't already done.
 
 2. Install Click To Globalize:
-   Rails 2.0
-   $ ./scripts/plugin install http://dev.23labs.net/svn/rails/plugins/click_to_globalize/trunk
+   Rails 2.1.x
+   $ ./script/plugin install git://github.com/jodosha/click-to-globalize.git
+   Rails 2.0.x
+   $ ./script/plugin install http://dev.23labs.net/svn/rails/plugins/click_to_globalize/trunk
    Rails 1.2.x
-   $ ./scripts/plugin install http://dev.23labs.net/svn/rails/plugins/click_to_globalize/branches/for-1.2.x
+   $ ./script/plugin install http://dev.23labs.net/svn/rails/plugins/click_to_globalize/branches/for-1.2.x
 
 3. Run the setup task:
    $ rake click:setup
@@ -120,8 +122,8 @@ Contribute
 ==========
 
 * Check out the code and test it:
-  $ svn co http://dev.23labs.net/svn/rails/plugins/click_to_globalize/trunk
-  $ rake click:test
+  $ git clone git://github.com/jodosha/click-to-globalize.git
+  $ rake click
 
 * Create a ticket to: http://dev.23labs.net/rails/trac.cgi
 
@@ -134,4 +136,4 @@ Javascript tests are based on Prototype[http://prototypejs.org] test libs.
 
 
 
-Copyright (c) 2007-2008 Luca Guidi - http://23labs.net, released under the MIT license
+Copyright (c) 2007-2008 Luca Guidi - http://lucaguidi.com, released under the MIT license
