@@ -125,7 +125,7 @@ Contribute
   $ git clone git://github.com/jodosha/click-to-globalize.git
   $ rake click
 
-* Create a ticket to: http://dev.23labs.net/rails/trac.cgi
+* Create a ticket to: http://sushistar.lighthouseapp.com/dashboard
 
 * Create a patch and add as attachement to the ticket.
 
