@@ -8,7 +8,7 @@ require 'active_record/fixtures'
 require 'ftools'
 
 rails_root		 = File.expand_path(RAILS_ROOT)
-plugin_root		 = File.join(rails_root, 'vendor', 'plugins', 'click_to_globalize')
+plugin_root		 = File.join(rails_root, 'vendor', 'plugins', 'click-to-globalize')
 templates_root = File.join(plugin_root, 'templates')
 shared_folder  = File.join(rails_root, 'app', 'views', 'shared')
 
