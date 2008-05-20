@@ -86,7 +86,7 @@ Install
 Uninstall
 =========
 
-1. $ ./script/plugin remove click_to_globalize
+1. $ ./script/plugin remove click-to-globalize
 
 Features
 ========
