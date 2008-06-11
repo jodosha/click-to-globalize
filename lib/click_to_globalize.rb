@@ -1,6 +1,17 @@
 # ClickToGlobalize
+require 'yaml'
+
 module Globalize # :nodoc:
   class Locale # :nodoc:
+    # It's the file used to configure the locales in your app.
+    # Please look at README for more information about the configuration.
+    @@config_file = RAILS_ROOT + '/config/locales.yml'
+    cattr_accessor :config_file
+    
+    # Contains an hash of locales configured in config/locales.yml
+    @@all = nil
+    cattr_writer :all
+    
     class << self
       alias_method :__translate, :translate
       def translate(key, default = nil, arg = nil, namespace = nil) # :nodoc:
@@ -19,6 +30,15 @@ module Globalize # :nodoc:
       # To easily plug-in this code I need always a ready <tt>Locale</tt>.
       def active?
         !active.nil?
+      end
+      
+      def all #:nodoc:
+        @@all ||= load_locales
+      end
+      
+      # Load all the locales in config_file.
+      def load_locales
+        YAML::load_file(config_file).symbolize_keys!
       end
       
       def notify_observers(key, result) # :nodoc:
@@ -109,22 +129,18 @@ module Globalize # :nodoc:
       protect_against_forgery? ? form_authenticity_token : ''
     end
     
-    # Returns the user defined languages in <tt>ApplicationController</tt>.
+    # Returns the languages defined in Locale#config_file
     def languages
-      controller.class.languages
+      Locale.all
     end
     
     # Creates the HTML markup for the languages picker menu.
     #
     # Example:
+    #   config/locales.yml
+    #     english: en-US
+    #     italian: it-IT
     #
-    #   class ApplicationController < ActionController::Base
-    #     self.languages :english => 'en-US', :italian => 'it-IT'
-    #   end
-    #
-    #   <%= languages_menu %>
-    #
-    #   returns:
     #   <ul>
     #     <li><a href="/locale/set/en-US" title="* English [en-US]">* English</a></li> |
     #     <li><a href="/locale/set/it-IT" title="Italian [it-IT]">Italian</a></li>

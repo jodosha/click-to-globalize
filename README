@@ -21,7 +21,7 @@ Getting Started
 1. Install Globalize[http://www.globalize-rails.org/].
 
 2. Install Click To Globalize:
-   $ ./scripts/plugin install git://github.com/jodosha/click-to-globalize.git
+   $ ./script/plugin install git://github.com/jodosha/click-to-globalize.git
 
 3. Add at the end of your layout the following code:
    <%= click_to_globalize -%>
@@ -59,10 +59,9 @@ Install
 4. Run the tests (optional):
    $ rake click:test
 
-5. Choose your languages, they will be used to create a picker menu.
-   class ApplicationController < ActionController::Base
-     self.languages = { :english => 'en-US', :italian => 'it-IT' }
-   end
+5. Edit config/locales.yml adding the locales you wish to use in your application.
+     english: en-US
+     italian: it-IT
    
 6. If you like to use wiki-formatting styles, you could use textile (RedCloth)
    or markdown (BlueCloth).
