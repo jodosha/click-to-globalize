@@ -6,5 +6,5 @@
 locales:
   english: en-US
   italian: it-IT
-#
-#   formatting: textile
+
+formatting: textile

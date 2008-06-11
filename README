@@ -65,10 +65,8 @@ Install
        italian: it-IT
    
 6. If you like to use wiki-formatting styles, you could use textile (RedCloth)
-   or markdown (BlueCloth).
-   class ApplicationController < ActionController::Base
-     self.formatting :textile
-   end
+   or markdown (BlueCloth). Edit config/click.yml
+     formatting: textile
 
 7. Personalize the access to the globalization features, overriding #globalize:
    class ApplicationController < ActionController::Base

@@ -58,6 +58,10 @@ class ClickToGlobalizeTest < Test::Unit::TestCase
     self.form_authenticity_token = '123'
   end
   
+  def teardown
+    Locale.formatting = Locale.configuration['formatting'].to_sym
+  end
+  
   # LOCALE_OBSERVER
   def test_locale_observer_init
     lo = LocaleObserver.new
@@ -216,24 +220,9 @@ class ClickToGlobalizeTest < Test::Unit::TestCase
       assert_equal(@hello_world.text, observer.translations[@hello_world.tr_key])
     end
   end
-  
-  def test_formatting_set
-    assert_nothing_raised(ArgumentError) { Locale.formatting = :textile }
+    
+  def test_should_load_formatting_from_configuration_file
     assert_equal(:textile, Locale.formatting)
-    
-    assert_nothing_raised(ArgumentError) { Locale.formatting = :markdown }
-    assert_equal(:markdown, Locale.formatting)
-    
-    assert_raise(NoMethodError) { Locale.formatting = nil }
-    assert_raise(ArgumentError) { Locale.formatting = :unknown }
-  end
-  
-  def test_formatting_method
-    Locale.formatting = :textile
-    assert_equal(:textilize_without_paragraph, Locale.formatting_method)
-
-    Locale.formatting = :markdown
-    assert_equal(:markdown, Locale.formatting_method) if Locale.markdown?
   end
 
   def test_textile
@@ -325,18 +314,7 @@ class ClickToGlobalizeTest < Test::Unit::TestCase
       assert_kind_of(String, locale)
     end
   end
-  
-  def test_formatting_set
-    assert_nothing_raised(ArgumentError) { ApplicationController.formatting :textile }
-    assert_equal(:textile, Locale.formatting)
     
-    assert_nothing_raised(ArgumentError) { ApplicationController.formatting :markdown }
-    assert_equal(:markdown, Locale.formatting) if Locale.markdown?
-    
-    assert_raise(NoMethodError) { ApplicationController.formatting nil }
-    assert_raise(ArgumentError) { ApplicationController.formatting :unknown }
-  end
-  
   def test_controller_observe_locale
     get :index, {:key => @hello_world.tr_key, :language_id => 1, :locale => @default_locale.code}
     assert_response :success

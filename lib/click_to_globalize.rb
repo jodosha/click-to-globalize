@@ -12,6 +12,9 @@ module Globalize # :nodoc:
     @@all = nil
     cattr_writer :all
     
+    # It's the formatting style (Textile or Markdown) configured in config_file
+    @@formatting = nil
+    
     class << self
       alias_method :__translate, :translate
       def translate(key, default = nil, arg = nil, namespace = nil) # :nodoc:
@@ -36,9 +39,14 @@ module Globalize # :nodoc:
         @@all ||= load_locales
       end
       
+      # Hash representation of config_file.
+      def configuration
+        @@configuration ||= YAML::load_file(config_file)
+      end
+      
       # Load all the locales in config_file.
       def load_locales
-        YAML::load_file(config_file)['locales'].symbolize_keys!
+        configuration['locales'].symbolize_keys!
       end
       
       def notify_observers(key, result) # :nodoc:
@@ -56,22 +64,18 @@ module Globalize # :nodoc:
       def observers # :nodoc:
         @observers ||= Set.new
       end
-      
-      def formatting # :nodoc:
-        @formatting
-      end
-      
-      # Sets the current formatting style.
+            
+      # Return the current formatting style defined in config_file.
       #
       # The options available are:
       #   * textile (RedCloth gem)
       #   * markdown (BlueCloth gem)
-      def formatting=(formatting)
-        @formatting = case formatting.to_sym
-                        when :textile  then textile?  ? :textile  : nil
-                        when :markdown then markdown? ? :markdown : nil
-                        else           raise ArgumentError
-                      end
+      def formatting
+        @@formatting ||= case configuration['formatting'].to_sym
+          when :textile  then textile?  ? :textile  : nil
+          when :markdown then markdown? ? :markdown : nil
+          else           raise ArgumentError
+        end
       end
 
       # Returns the method for the current formatting style.
@@ -80,7 +84,7 @@ module Globalize # :nodoc:
       #   * textilize_without_paragraph (textile)
       #   * markdown (markdown)
       def formatting_method
-        case @formatting
+        case @@formatting
           when :textile  then :textilize_without_paragraph
           when :markdown then :markdown
         end
@@ -88,12 +92,12 @@ module Globalize # :nodoc:
 
       # Checks if the RedCloth gem is installed and already required.
       def textile?
-        @textile ||= Object.const_defined?(:RedCloth)
+        @@textile ||= Object.const_defined?(:RedCloth)
       end
       
       # Checks if the BlueCloth gem is installed and already required.
       def markdown?
-        @markdown ||= Object.const_defined?(:BlueCloth)
+        @@markdown ||= Object.const_defined?(:BlueCloth)
       end
     end
   end 
