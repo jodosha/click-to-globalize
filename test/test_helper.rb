@@ -9,4 +9,10 @@ module Globalize #:nodoc:
       @@formatting = formatting
     end
   end
+  
+  module Helpers #:nodoc:
+    def self.click_partial #:nodoc:
+      @@click_partial
+    end
+  end
 end

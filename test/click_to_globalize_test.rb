@@ -39,7 +39,7 @@ class ClickToGlobalizeTest < Test::Unit::TestCase
     @default_locale = Locale.new('en-US')
     @italian_locale = Locale.new('it-IT')
 
-    @partial_path   = 'shared/_click_to_globalize'
+    @click_partial  = 'shared/_click_to_globalize'
     @base_language  = {:english => 'en-US'}
     @languages      = {:english => 'en-US', :italian => 'it-IT'}
     @new_languages  = {:spanish => 'es-ES', :french => 'fr-FR'}
@@ -243,7 +243,7 @@ class ClickToGlobalizeTest < Test::Unit::TestCase
   
   # HELPERS
   def test_helper_partial
-    assert_equal(@partial_path, Helpers.send(:class_variable_get, :@@partial))
+    assert_equal(@click_partial, Helpers.click_partial)
   end
   
   def test_helper_authenticity_token_should_return_form_authenticity_token_when_protect_against_forgery_is_active

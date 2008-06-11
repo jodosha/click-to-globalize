@@ -118,13 +118,13 @@ module Globalize # :nodoc:
   end
   
   module Helpers # :nodoc:
-    @@partial = 'shared/_click_to_globalize'
+    @@click_partial = 'shared/_click_to_globalize'
     
     # Render +app/views/shared/_click_to_globalize.html.erb+.
     def click_to_globalize
       # Note: controller.class.globalize? is deprecated.
       return unless controller.globalize? && controller.class.globalize?
-      render @@partial
+      render @@click_partial
     end
     
     # Get form_authenticity_token if the application is protected from forgery.
