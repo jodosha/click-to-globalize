@@ -5,10 +5,10 @@ module Globalize # :nodoc:
   class Locale # :nodoc:
     # It's the file used to configure the locales in your app.
     # Please look at README for more information about the configuration.
-    @@config_file = RAILS_ROOT + '/config/locales.yml'
+    @@config_file = RAILS_ROOT + '/config/click.yml'
     cattr_accessor :config_file
     
-    # Contains an hash of locales configured in config/locales.yml
+    # Contains an hash of locales configured in config_file
     @@all = nil
     cattr_writer :all
     
@@ -137,7 +137,7 @@ module Globalize # :nodoc:
     # Creates the HTML markup for the languages picker menu.
     #
     # Example:
-    #   config/locales.yml
+    #   config/click.yml
     #     english: en-US
     #     italian: it-IT
     #

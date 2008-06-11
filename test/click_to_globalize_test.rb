@@ -29,7 +29,7 @@ class ClickToGlobalizeTest < Test::Unit::TestCase
   def setup
     assert_nil(Locale.send(:class_variable_set, :@@active, nil))
     
-    Locale.config_file = File.dirname(__FILE__) + '/config/locales.yml'
+    Locale.config_file = File.dirname(__FILE__) + '/config/click.yml'
     
     # TODO load w/ #inject
     @hello_world  = Translation.find(1)

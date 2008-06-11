@@ -59,7 +59,7 @@ Install
 4. Run the tests (optional):
    $ rake click:test
 
-5. Edit config/locales.yml adding the locales you wish to use in your application.
+5. Edit config/click.yml adding the locales you wish to use in your application.
      english: en-US
      italian: it-IT
    

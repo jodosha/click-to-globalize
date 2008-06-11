@@ -19,7 +19,7 @@ files = { :click_to_globalize_js        => File.join(rails_root, 'public', 'java
           :locale_controller_rb         => File.join(rails_root, 'app',		 'controllers', 'locale_controller.rb'),
           :locale_helper_rb  		        => File.join(rails_root, 'app',		 'helpers',			'locale_helper.rb'),
           :_click_to_globalize_html_erb => File.join(rails_root, 'app',		 'views',			  'shared', '_click_to_globalize.html.erb'),
-          :locales_yml                  => File.join(rails_root, 'config', 'locales.yml') }
+          :click_yml                    => File.join(rails_root, 'config', 'click.yml') }
 
 desc 'Default: run click task.'
 task :default => :click
