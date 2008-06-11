@@ -38,7 +38,7 @@ module Globalize # :nodoc:
       
       # Load all the locales in config_file.
       def load_locales
-        YAML::load_file(config_file).symbolize_keys!
+        YAML::load_file(config_file)['locales'].symbolize_keys!
       end
       
       def notify_observers(key, result) # :nodoc:
@@ -138,8 +138,9 @@ module Globalize # :nodoc:
     #
     # Example:
     #   config/click.yml
-    #     english: en-US
-    #     italian: it-IT
+    #     locales:
+    #       english: en-US
+    #       italian: it-IT
     #
     #   <ul>
     #     <li><a href="/locale/set/en-US" title="* English [en-US]">* English</a></li> |

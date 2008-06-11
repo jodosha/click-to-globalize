@@ -1,4 +1,10 @@
-# Add all the locales you wish to be available in your application.
+# Click to Globalize
 #
-# english: en-US
-# italian: it-IT
+# Add all the locales you wish to be available in your application.
+# You may also wish to use Textile or Markdown.
+#
+#   locales:
+#     english: en-US
+#     italian: it-IT
+#
+#   formatting: textile

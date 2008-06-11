@@ -60,8 +60,9 @@ Install
    $ rake click:test
 
 5. Edit config/click.yml adding the locales you wish to use in your application.
-     english: en-US
-     italian: it-IT
+     locales:
+       english: en-US
+       italian: it-IT
    
 6. If you like to use wiki-formatting styles, you could use textile (RedCloth)
    or markdown (BlueCloth).
