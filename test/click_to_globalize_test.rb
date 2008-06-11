@@ -1,6 +1,6 @@
 require 'test/test_helper'
 require 'test/unit'
-require 'vendor/plugins/click_to_globalize/test/test_helper'
+require File.dirname(__FILE__) + '/test_helper'
 
 class ClickToGlobalizeController < ApplicationController
   def rescue_action(e) raise e end;
