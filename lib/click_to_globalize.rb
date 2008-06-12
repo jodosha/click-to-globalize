@@ -56,6 +56,12 @@ module Globalize # :nodoc:
         configuration['locales'].symbolize_keys!
       end
       
+      # Load the base language if configured in config_file.
+      def load_configured_base_language
+        language_key = configuration['default']
+        self.set_base_language(all[language_key]) unless language_key.nil?
+      end
+      
       def notify_observers(key, result) # :nodoc:
         observers.each { |observer| observer.update(key, result) }
       end

@@ -29,7 +29,8 @@ class ClickToGlobalizeTest < Test::Unit::TestCase
     assert_nil(Locale.send(:class_variable_set, :@@active, nil))
     
     Locale.config_file = File.dirname(__FILE__) + '/config/click.yml'
-    
+    Locale.load_configured_base_language
+
     # TODO load w/ #inject
     @hello_world  = Translation.find(1)
     @ciao_mondo   = Translation.find(2)
@@ -133,6 +134,11 @@ class ClickToGlobalizeTest < Test::Unit::TestCase
     uses_config_file 'empty.yml' do
       assert_raise(NoConfiguredLocalesError) { Locale.load_locales }
     end
+  end
+  
+  def test_should_load_configured_base_language
+    Locale.load_configured_base_language
+    assert_equal(@default_locale.code, Locale.active.code)
   end
   
   def test_locale_set

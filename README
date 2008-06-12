@@ -63,12 +63,15 @@ Install
      locales:
        english: en-US
        italian: it-IT
+
+6. You can configure the default locale in config/click.yml
+     default: :english
    
-6. If you like to use wiki-formatting styles, you could use textile (RedCloth)
+7. If you like to use wiki-formatting styles, you could use textile (RedCloth)
    or markdown (BlueCloth). Edit config/click.yml
      formatting: textile
 
-7. Personalize the access to the globalization features, overriding #globalize:
+8. Personalize the access to the globalization features, overriding #globalize:
    class ApplicationController < ActionController::Base
      def globalize?
        current_user.admin?
@@ -78,7 +81,7 @@ Install
    NOTE: #globalize? is method to turn on/off all the Click to Globalize features.
    NOTE: self.globalize? has been deprecated in favor of globalize?.
 
-8. Add at the end of your layout the following code:
+9. Add at the end of your layout the following code:
    <%= click_to_globalize -%>
 
 Uninstall
