@@ -147,15 +147,15 @@ module Globalize # :nodoc:
     #       italian: it-IT
     #
     #   <ul>
-    #     <li><a href="/locale/set/en-US" title="* English [en-US]">* English</a></li> |
-    #     <li><a href="/locale/set/it-IT" title="Italian [it-IT]">Italian</a></li>
+    #     <li><a href="/locales/set/en-US" title="* English [en-US]">* English</a></li> |
+    #     <li><a href="/locales/set/it-IT" title="Italian [it-IT]">Italian</a></li>
     #   </ul>
     def languages_menu
       returning result = '<ul>' do
         result << languages.map do |language, locale|
           language = language.to_s.titleize
           language = "* #{language}" if locale == Locale.active.code
-          "<li>#{link_to language, {:controller => 'locale', :action => 'set', :id => locale}, {:title => "#{language} [#{locale}]"}}</li>"
+          "<li>#{link_to language, {:controller => 'locales', :action => 'set', :id => locale}, {:title => "#{language} [#{locale}]"}}</li>"
         end * ' | '
       end
       result << '</ul>'
@@ -254,5 +254,5 @@ ActionController::Base.class_eval do # :nodoc:
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::SanitizeHelper
   # Note: self.globalize? is deprecated.
-  around_filter :observe_locale, :except => { :controller => :locale }, :if => globalize? && self.globalize?
+  around_filter :observe_locale, :except => { :controller => :locales }, :if => globalize? && self.globalize?
 end

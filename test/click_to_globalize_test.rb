@@ -48,7 +48,7 @@ class ClickToGlobalizeTest < Test::Unit::TestCase
                :markdown => 'markdown( @formatted_value )',
                :other    => '@formatted_value'}
 
-    @locale_controller = LocaleController.new
+    @locales_controller = LocalesController.new
 
     @controller = ClickToGlobalizeController.new
     @request    = ActionController::TestRequest.new
@@ -327,20 +327,20 @@ class ClickToGlobalizeTest < Test::Unit::TestCase
   
   # LOCALE_CONTROLLER
   def test_check_globalize
-    assert(@locale_controller.send(:check_globalize))
+    assert(@locales_controller.send(:check_globalize))
   end
   
   def test_clear_cache
-    @locale_controller.send(:clear_cache)
+    @locales_controller.send(:clear_cache)
     assert_equal({}, Locale.send(:class_variable_get, :@@cache))
   end
   
   def test_inline
     Locale.formatting = :textile
-    assert_equal(@inline[:textile], @locale_controller.send(:inline))
+    assert_equal(@inline[:textile], @locales_controller.send(:inline))
     
     Locale.formatting = :markdown
-    assert_equal(@inline[:markdown], @locale_controller.send(:inline)) if Locale.markdown?
+    assert_equal(@inline[:markdown], @locales_controller.send(:inline)) if Locale.markdown?
   end
   
   def protect_against_forgery?

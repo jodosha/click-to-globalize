@@ -114,9 +114,9 @@ var ClickToGlobalize = Class.create({
 
 Object.extend(ClickToGlobalize, {
   DefaultOptions: {
-	  translateUrl:             '/locale/translate',
-	  translateUnformattedUrl:  '/locale/translate_unformatted',
-	  translationsUrl:          '/locale/translations',
+	  translateUrl:             '/locales/translate',
+	  translateUnformattedUrl:  '/locales/translate_unformatted',
+	  translationsUrl:          '/locales/translations',
 	  httpMethod:               'post',
 	  asynchronous:              true,
 	  textileElements:  [ 'a', 'acronym', 'blockquote', 'bold', 'cite', 'code',

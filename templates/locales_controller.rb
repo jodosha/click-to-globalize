@@ -1,4 +1,4 @@
-class LocaleController < ApplicationController
+class LocalesController < ApplicationController
   before_filter :check_globalize, :clear_cache
   
   def set

@@ -14,10 +14,10 @@ shared_folder  = File.join(rails_root, 'app', 'views', 'shared')
 
 require "#{plugin_root}/test/lib/jstest"
 
-files = { :click_to_globalize_js        => File.join(rails_root, 'public', 'javascripts',  'click_to_globalize.js'),
-          :click_to_globalize_css       => File.join(rails_root, 'public', 'stylesheets',  'click_to_globalize.css'),
-          :locale_controller_rb         => File.join(rails_root, 'app',		 'controllers', 'locale_controller.rb'),
-          :locale_helper_rb  		        => File.join(rails_root, 'app',		 'helpers',			'locale_helper.rb'),
+files = { :click_to_globalize_js        => File.join(rails_root, 'public', 'javascripts', 'click_to_globalize.js'),
+          :click_to_globalize_css       => File.join(rails_root, 'public', 'stylesheets', 'click_to_globalize.css'),
+          :locales_controller_rb        => File.join(rails_root, 'app',		 'controllers', 'locales_controller.rb'),
+          :locales_helper_rb  	        => File.join(rails_root, 'app',		 'helpers',			'locales_helper.rb'),
           :_click_to_globalize_html_erb => File.join(rails_root, 'app',		 'views',			  'shared', '_click_to_globalize.html.erb'),
           :click_yml                    => File.join(rails_root, 'config', 'click.yml') }
 
