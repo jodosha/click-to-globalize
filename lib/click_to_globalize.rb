@@ -2,6 +2,12 @@
 require 'yaml'
 
 module Globalize # :nodoc:
+  class NoConfiguredLocalesError < StandardError #:nodoc:
+    def to_s
+      "No configured locales in #{Locale.config_file}"
+    end
+  end
+
   class Locale # :nodoc:
     # It's the file used to configure the locales in your app.
     # Please look at README for more information about the configuration.
@@ -46,6 +52,7 @@ module Globalize # :nodoc:
       
       # Load all the locales in config_file.
       def load_locales
+        raise NoConfiguredLocalesError unless configuration
         configuration['locales'].symbolize_keys!
       end
       

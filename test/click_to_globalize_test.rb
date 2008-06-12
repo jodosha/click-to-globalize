@@ -128,6 +128,12 @@ class ClickToGlobalizeTest < Test::Unit::TestCase
     Locale.load_locales
     assert_equal(@languages, Locale.all)
   end
+
+  def test_should_raise_exception_for_missing_configured_languages
+    uses_config_file 'empty.yml' do
+      assert_raise(NoConfiguredLocalesError) { Locale.load_locales }
+    end
+  end
   
   def test_locale_set
     assert_nil(Locale.send(:class_variable_get, :@@active))
