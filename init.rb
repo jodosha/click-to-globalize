@@ -7,4 +7,5 @@ else
   Rails::Initializer.run { |config| config.plugins = plugins }
 end
 
+Object.send :include, Globalize
 require 'click_to_globalize'

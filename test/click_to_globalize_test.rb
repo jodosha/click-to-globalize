@@ -21,7 +21,6 @@ ApplicationHelper.class_eval do
 end
 
 class ClickToGlobalizeTest < Test::Unit::TestCase
-  include Globalize
   include ApplicationHelper
   
   attr_accessor :protect_against_forgery, :form_authenticity_token
