@@ -221,38 +221,6 @@ module Globalize # :nodoc:
       def globalize?
         true
       end
-
-      # Sets the current formatting style.
-      #
-      # The options available are:
-      #   * textile (RedCloth gem)
-      #   * markdown (BlueCloth gem)
-      #
-      # Example:
-      #
-      #   class ApplicationController < ActionController::Base
-      #     self.formatting :textile
-      #   end
-      def formatting(formatting)
-        Locale.formatting = formatting
-      end
-
-      def languages #:nodoc:
-        @@languages ||= {Locale.active.language.to_s.downcase.to_sym =>  Locale.active.code}
-      end
-      
-      # Set the application languages.
-      #
-      # Example:
-      #
-      #   class ApplicationController < ActionController::Base
-      #     self.languages = { :english => 'en-US, :italian => 'it-IT' }
-      #   end
-      def languages=(languages_hash)
-        base_language = Locale.active.language.nil? ? {} : { Locale.active.language.to_s.downcase.to_sym => Locale.active.code }
-        @@languages = languages_hash.merge(base_language) unless languages_hash.nil?
-        @@languages
-      end
     end
   end
 end

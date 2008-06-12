@@ -271,7 +271,7 @@ class ClickToGlobalizeTest < Test::Unit::TestCase
   end
       
   def test_helper_languages
-    ApplicationController.languages = @languages
+    Locale.all = @languages
     assert_equal(@languages, languages)
   end
   
@@ -287,45 +287,7 @@ class ClickToGlobalizeTest < Test::Unit::TestCase
   def test_controller_globalize
     assert @controller.globalize?
   end
-  
-  def test_languages_set
-    assert_not_nil(ApplicationController.languages)
-    ApplicationController.languages = nil
-    assert_equal(@languages, ApplicationController.languages)
         
-    ApplicationController.languages = @languages
-    assert_not_nil(ApplicationController.languages)
-    assert_kind_of(Hash, ApplicationController.languages)
-    assert_equal(@languages, ApplicationController.languages)
-    
-    ApplicationController.languages = @new_languages
-    assert_not_nil(ApplicationController.languages)
-    assert_kind_of(Hash, ApplicationController.languages)
-    assert_equal(@new_languages.merge(@base_language), ApplicationController.languages)
-    
-    ApplicationController.languages = @languages # re-assign
-    assert_equal(@languages, ApplicationController.languages)
-
-    ApplicationController.languages = @new_languages
-    assert_equal(@new_languages.merge(@base_language), ApplicationController.languages)
-  end
-  
-  def test_languages
-    ApplicationController.languages = @languages
-    languages = ApplicationController.languages
-    assert_not_nil(languages)
-    assert_kind_of(Hash, languages)
-    assert_equal(@languages, languages)
-    languages.each do |language, locale|
-      assert_not_nil(language)
-      assert_kind_of(Symbol, language)
-      assert_equal(@languages[language], languages[language])
-      
-      assert_not_nil(locale)
-      assert_kind_of(String, locale)
-    end
-  end
-    
   def test_controller_observe_locale
     get :index, {:key => @hello_world.tr_key, :language_id => 1, :locale => @default_locale.code}
     assert_response :success
