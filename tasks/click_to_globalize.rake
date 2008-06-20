@@ -12,7 +12,7 @@ plugin_root		 = File.join(rails_root, 'vendor', 'plugins', 'click-to-globalize')
 templates_root = File.join(plugin_root, 'templates')
 shared_folder  = File.join(rails_root, 'app', 'views', 'shared')
 
-require "#{plugin_root}/test/lib/jstest"
+require plugin_root + '/test/lib/jstest'
 
 files = { :click_to_globalize_js        => File.join(rails_root, 'public', 'javascripts', 'click_to_globalize.js'),
           :click_to_globalize_css       => File.join(rails_root, 'public', 'stylesheets', 'click_to_globalize.css'),
@@ -90,7 +90,8 @@ namespace :click do
       puts 'DONE'
     end
     
-    puts "\nClick to Globalize was correctly installed."
+    puts "\nClick to Globalize was correctly installed." +
+      "\nRemember to edit config/click.yml to add your locales.\n\n"
   end
   
   desc 'Uninstall Click to Globalize plugin.'
@@ -112,7 +113,7 @@ namespace :click do
       puts   empty ? 'DONE' : 'SKIPPED'  
     end
     
-    puts "\nClick To Globalize was correctly uninstalled."
+    puts "\nClick to Globalize was correctly uninstalled."
   end
   
   desc 'Show the diffs for each file, camparing the app files with the plugin ones.'
