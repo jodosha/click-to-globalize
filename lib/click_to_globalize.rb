@@ -231,7 +231,7 @@ module Globalize # :nodoc:
   end
 end
 
-module ApplicationHelper # :nodoc:
+ActionView::Base.class_eval do
   include Globalize::Helpers
 end
 
