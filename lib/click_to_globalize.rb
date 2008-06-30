@@ -8,6 +8,12 @@ module Globalize # :nodoc:
     end
   end
 
+  class NoBaseLanguageError < StandardError #:nodoc:
+    def to_s
+      "No configured base language."
+    end
+  end
+
   class Locale # :nodoc:
     # It's the file used to configure the locales in your app.
     # Please look at README for more information about the configuration.
