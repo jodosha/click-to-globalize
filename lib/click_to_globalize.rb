@@ -90,6 +90,7 @@ module Globalize # :nodoc:
       #   * textile (RedCloth gem)
       #   * markdown (BlueCloth gem)
       def formatting
+        return unless configuration['formatting']
         @@formatting ||= case configuration['formatting'].to_sym
           when :textile  then textile?  ? :textile  : nil
           when :markdown then markdown? ? :markdown : nil
