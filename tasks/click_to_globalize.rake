@@ -14,12 +14,12 @@ shared_folder  = File.join(rails_root, 'app', 'views', 'shared')
 
 require plugin_root + '/test/lib/jstest'
 
-files = { :click_to_globalize_js        => File.join(rails_root, 'public', 'javascripts', 'click_to_globalize.js'),
-          :click_to_globalize_css       => File.join(rails_root, 'public', 'stylesheets', 'click_to_globalize.css'),
-          :locales_controller_rb        => File.join(rails_root, 'app',		 'controllers', 'locales_controller.rb'),
-          :locales_helper_rb  	        => File.join(rails_root, 'app',		 'helpers',			'locales_helper.rb'),
-          :_click_to_globalize_html_erb => File.join(rails_root, 'app',		 'views',			  'shared', '_click_to_globalize.html.erb'),
-          :click_yml                    => File.join(rails_root, 'config', 'click.yml') }
+files = [ File.join(rails_root, 'public', 'javascripts', 'click_to_globalize.js'),
+  File.join(rails_root, 'public', 'stylesheets', 'click_to_globalize.css'),
+  File.join(rails_root, 'app',		 'controllers', 'locales_controller.rb'),
+  File.join(rails_root, 'app',		 'helpers',			'locales_helper.rb'),
+  File.join(rails_root, 'app',		 'views',			  'shared', '_click_to_globalize.html.erb'),
+  File.join(rails_root, 'config', 'click.yml') ]
 
 desc 'Default: run click task.'
 task :default => :click
@@ -83,7 +83,7 @@ namespace :click do
     FileUtils.mkdir(shared_folder) unless File.directory?(shared_folder)
 
     # Copy Click To Globalize files.
-    files.each do |file, path|
+    files.each do |path|
       file = path.split(File::SEPARATOR).last
       printf "Copying #{file} ... "
       File.cp File.join(templates_root, file), path
@@ -97,7 +97,7 @@ namespace :click do
   desc 'Uninstall Click to Globalize plugin.'
   task :uninstall do
     # Delete Click To Globalize files.
-    files.each do |file, path|
+    files.each do |path|
       file = path.split(File::SEPARATOR).last
       exists = File.exists?(path)
       printf "Deleting #{file} ... "
