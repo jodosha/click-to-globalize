@@ -6,7 +6,7 @@ class LocalesController < ApplicationController
     session[:locale] = Locale.active
     session[:__globalize_translations] = nil
     logger.debug("[#{Time.now.to_s(:db)}] - Set current Locale on #{Locale.language}")
-    redirect_to request.env['HTTP_REFERER'] if request.env['HTTP_REFERER']
+    redirect_to :back
   end
 
   def translate
