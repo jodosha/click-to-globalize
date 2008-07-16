@@ -201,6 +201,7 @@ module Globalize # :nodoc:
       # request is processed.
       # <tt>LocaleObserver</tt> catches all translations and pass them to the session.
       def observe_locale
+        return unless globalize?
         locale_observer = LocaleObserver.new
         Globalize::Locale.add_observer(locale_observer)
         yield
@@ -232,7 +233,7 @@ module Globalize # :nodoc:
   end
 end
 
-ActionView::Base.class_eval do
+ApplicationHelper.class_eval do
   include Globalize::Helpers
 end
 
@@ -241,6 +242,4 @@ ActionController::Base.class_eval do # :nodoc:
   include Globalize::Controller::InstanceMethods
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::SanitizeHelper
-  # Note: self.globalize? is deprecated.
-  around_filter :observe_locale, :except => { :controller => :locales }, :if => globalize? && self.globalize?
 end

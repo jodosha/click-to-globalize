@@ -3,6 +3,7 @@ require 'test/unit'
 require File.dirname(__FILE__) + '/test_helper'
 
 class ClickToGlobalizeController < ApplicationController
+  around_filter :observe_locale
   def rescue_action(e) raise e end;
   def index
     Locale.set(params[:locale])
@@ -13,16 +14,10 @@ class ClickToGlobalizeController < ApplicationController
 end
 module ClickToGlobalizeHelper; end
 
-ApplicationHelper.class_eval do
-  def controller
-    @controller = ClickToGlobalizeController.new
-    @controller
-  end
-end
-
 class ClickToGlobalizeTest < Test::Unit::TestCase
+  ActiveRecord::Base.store_full_sti_class = false
   include ApplicationHelper
-  
+
   attr_accessor :protect_against_forgery, :form_authenticity_token
   
   def setup
@@ -60,6 +55,7 @@ class ClickToGlobalizeTest < Test::Unit::TestCase
   
   def teardown
     Locale.formatting = Locale.configuration['formatting'].to_sym
+    Locale.observers.clear
   end
   
   # LOCALE_OBSERVER
