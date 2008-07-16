@@ -32,9 +32,7 @@ class LocalesController < ApplicationController
   end
 
   private
-    def clear_cache
-      Locale.clear_cache
-    end
+    delegate :clear_cache, :to => Locale
   
     def inline
       case Locale.formatting
