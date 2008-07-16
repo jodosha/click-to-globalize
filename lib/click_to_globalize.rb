@@ -53,12 +53,15 @@ module Globalize # :nodoc:
       
       # Hash representation of config_file.
       def configuration
-        @@configuration ||= YAML::load_file(config_file)
+        @@configuration ||= begin
+          result = YAML::load_file(config_file)
+          raise NoConfiguredLocalesError unless result
+          result
+        end
       end
       
       # Load all the locales in config_file.
       def load_locales
-        raise NoConfiguredLocalesError unless configuration
         configuration['locales'].symbolize_keys!
       end
       

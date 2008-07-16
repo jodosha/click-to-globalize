@@ -1,0 +1,14 @@
+# Click to Globalize
+#
+# Add all the locales you wish to be available in your application.
+#
+# You can configure the base language (optional):
+#   default: :english
+# This is equivalent to:
+#   Locale.set_base_language('en-US')
+#
+# You may also wish to use Textile or Markdown.
+#
+locales:
+  english: en-US
+  italian: it-IT

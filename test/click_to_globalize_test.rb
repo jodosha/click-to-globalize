@@ -106,7 +106,7 @@ class ClickToGlobalizeTest < Test::Unit::TestCase
 
   def test_should_raise_exception_for_missing_configured_languages
     uses_config_file 'empty.yml' do
-      assert_raise(NoConfiguredLocalesError) { Locale.load_locales }
+      assert_raise(NoConfiguredLocalesError) { Locale.configuration }
     end
   end
 
