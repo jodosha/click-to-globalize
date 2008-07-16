@@ -1,5 +1,4 @@
-ClickToGlobalize
-================
+= ClickToGlobalize
 
 Click to Globalize is an extension for Globalize plugin, it allows to edit in
 place globalized labels. With this plugin you don't have to create a
@@ -13,26 +12,34 @@ be rendered, until the page load.
 
 Now you can forget this issues, you can directly globalize in place!!
 
-Check for news and tutorials at the project home page[http://www.lucaguidi.com/pages/click-to-globalize].
+Check for news and tutorials at the {project home page}[http://www.lucaguidi.com/pages/click-to-globalize].
 
-Getting Started
-===============
+
+
+= Getting Started
 
 1. Install Globalize[http://www.globalize-rails.org/].
 
 2. Install Click To Globalize:
    $ ./script/plugin install git://github.com/jodosha/click-to-globalize.git
+   rake click:setup
 
-3. Add at the end of your layout the following code:
+3. Add to ApplicationController:
+   around_filter :observe_locale
+
+4. Edit config/click.yml
+
+5. Add at the end of your layout the following code:
    <%= click_to_globalize -%>
 
-4. Put in your view:
+6. Put in your view:
    <%= 'hello_world'.t %>
 
-5. Start your server and click to globalize.
+7. Start your server and click to globalize.
 
-Prerequisites
-=============
+
+
+= Prerequisites
 
 * Globalize plugin: www.globalize-rails.org.
   
@@ -40,8 +47,9 @@ Prerequisites
 
 * BlueCloth gem (optional) for markdown formatting.
 
-Install
-=======
+
+
+= Install
 
 1. Install Globalize, if you don't already done.
 
@@ -71,7 +79,10 @@ Install
    or markdown (BlueCloth). Edit config/click.yml
      formatting: textile
 
-8. Personalize the access to the globalization features, overriding #globalize:
+8. Add to ApplicationController:
+   around_filter :observe_locale
+
+9. Personalize the access to the globalization features, overriding #globalize:
    class ApplicationController < ActionController::Base
      def globalize?
        current_user.admin?
@@ -79,18 +90,19 @@ Install
    end
    
    NOTE: #globalize? is method to turn on/off all the Click to Globalize features.
-   NOTE: self.globalize? has been deprecated in favor of globalize?.
 
-9. Add at the end of your layout the following code:
+10. Add at the end of your layout the following code:
    <%= click_to_globalize -%>
 
-Uninstall
-=========
+
+
+= Uninstall
 
 1. $ ./script/plugin remove click-to-globalize
 
-Features
-========
+
+
+= Features
 
 * In place editing for each globalized string.
 
@@ -102,8 +114,9 @@ Features
 
 * Auto transformation from input text to textarea for long strings.
 
-Common Issues
-=============
+
+
+= Common Issues
 
 * Since the Globalize plugin creates folders like 'for-1.2', be sure to rename
   the folder to 'globalize'.
@@ -118,20 +131,22 @@ Common Issues
 * If you use a wiki-formatting style it could be advisable to use #h to avoid
   security problems (i.e. XSS).
   <%= textilize(h('some_text'.t)) %>
+
+
   
-Contribute
-==========
+= Contribute
 
 * Check out the code and test it:
   $ git clone git://github.com/jodosha/click-to-globalize.git
   $ rake click
 
-* Create a ticket to: http://sushistar.lighthouseapp.com/dashboard
+* Create a ticket to the {Sushistar Lighthouse page}[http://sushistar.lighthouseapp.com]
 
 * Create a patch and add as attachement to the ticket.
 
-Credits
-=======
+
+
+= Credits
 
 Javascript tests are based on Prototype[http://prototypejs.org] test libs.
 
