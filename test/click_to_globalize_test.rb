@@ -3,8 +3,6 @@ require 'test/unit'
 require File.dirname(__FILE__) + '/test_helper'
 
 class ClickToGlobalizeController < ApplicationController
-  around_filter :observe_locale
-  def rescue_action(e) raise e end;
   def index
     Locale.set(params[:locale])
     hello_world = Translation.find_by_tr_key_and_language_id(params[:key], params[:language_id])
@@ -17,12 +15,14 @@ module ClickToGlobalizeHelper; end
 class ClickToGlobalizeTest < Test::Unit::TestCase
   ActiveRecord::Base.store_full_sti_class = false
   include ApplicationHelper
+  include ActionView::Helpers::UrlHelper
+  include ActionView::Helpers::TagHelper
 
   attr_accessor :protect_against_forgery, :form_authenticity_token
-  
+
   def setup
-    assert_nil(Locale.send(:class_variable_set, :@@active, nil))
-    
+    Locale.active = nil
+
     Locale.config_file = File.dirname(__FILE__) + '/config/click.yml'
     Locale.load_configured_base_language
 
@@ -37,93 +37,71 @@ class ClickToGlobalizeTest < Test::Unit::TestCase
     @click_partial  = 'shared/_click_to_globalize'
     @base_language  = {:english => 'en-US'}
     @languages      = {:english => 'en-US', :italian => 'it-IT'}
-    @new_languages  = {:spanish => 'es-ES', :french => 'fr-FR'}
-    
-    @inline = {:textile  => 'textilize_without_paragraph( @formatted_value )',
-               :markdown => 'markdown( @formatted_value )',
-               :other    => '@formatted_value'}
+
+    @inline = { :textile  => 'textilize_without_paragraph( @formatted_value )',
+                :markdown => 'markdown( @formatted_value )',
+                :other    => '@formatted_value' }
 
     @locales_controller = LocalesController.new
 
     @controller = ClickToGlobalizeController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
-    
+
     self.protect_against_forgery = true
     self.form_authenticity_token = '123'
   end
-  
+
   def teardown
     Locale.formatting = Locale.configuration['formatting'].to_sym
     Locale.observers.clear
   end
-  
-  # LOCALE_OBSERVER
-  def test_locale_observer_init
-    lo = LocaleObserver.new
-    assert_not_nil(lo)
-    assert_kind_of(LocaleObserver, lo)
-    
-    assert_not_nil(lo.translations)
-    assert(lo.translations.empty?)
-    assert_kind_of(Hash, lo.translations)
+
+  ### LOCALE_OBSERVER
+
+  def test_should_instantiate
+    locale_observer = LocaleObserver.new
+    assert_empty locale_observer.translations
   end
-  
-  def test_locale_observer_update
-    lo = LocaleObserver.new
-    lo.update(nil, nil)
-    assert_equal({nil => nil}, lo.translations)
-    assert_nil(lo.translations[nil])
-    lo.instance_variable_set(:@translations, {})
-    
-    lo.update(@hello_world.tr_key, @hello_world.text)
-    assert_equal({@hello_world.tr_key => @hello_world.text}, lo.translations)
-    assert_equal(@hello_world.text, lo.translations[@hello_world.tr_key])
-    
-    lo.update(@ciao_mondo.tr_key, @ciao_mondo.text)
-    assert_equal({@ciao_mondo.tr_key => @ciao_mondo.text}, lo.translations)
-    assert_equal(@ciao_mondo.text, lo.translations[@ciao_mondo.tr_key])
-    
-    lo.update(@good_morning.tr_key, @good_morning.text)
-    assert_equal({@ciao_mondo.tr_key => @ciao_mondo.text, @good_morning.tr_key => @good_morning.text}, lo.translations)
-    assert_equal(@good_morning.text, lo.translations[@good_morning.tr_key])
+
+  def test_should_update_translations
+    expected = { @hello_world.tr_key => @hello_world.text }
+
+    locale_observer.update @hello_world.tr_key, @hello_world.text
+    assert_equal expected, locale_observer.translations
+
+    expected.merge!({ @ciao_mondo.tr_key => @ciao_mondo.text })
+    locale_observer.update @ciao_mondo.tr_key, @ciao_mondo.text
+    assert_equal expected, locale_observer.translations
   end
-  
-  def test_locale_observer_missing_translations_setter
-    lo = LocaleObserver.new
-    assert_raise(NoMethodError) { lo.translations = {} }
+
+  def test_should_raise_no_exception_on_updating_nil_translations
+    assert_nothing_raised Exception do
+      locale_observer.update nil, nil
+      assert_equal({nil => nil}, locale_observer.translations)
+    end
   end
-  
-  # LOCALE
-  def test_locale_active
-    assert_nil(Locale.send(:class_variable_get, :@@active))
-    
-    base_language_code = Locale.send(:class_variable_get, :@@base_language_code)
-    
-    assert_not_nil(base_language_code)
-    assert_kind_of(RFC_3066, base_language_code)
-    
-    assert_not_nil(base_language_code.locale)
-    assert_kind_of(String, base_language_code.locale)
-    assert_equal(@default_locale.code, base_language_code.locale)
-    
-    assert_not_nil(Locale.active)
-    assert_not_nil(Locale.send(:class_variable_get, :@@active))
-    assert_kind_of(Locale, Locale.active)
-    assert(Locale.active?)
-    
-    assert_kind_of(Country, Locale.country)
-    assert_equal(@default_locale.country.code, Locale.country.code)
-    
-    assert_equal(Locale.base_language, Locale.active.language)
-    assert_equal(@default_locale.language.code, Locale.language_code)
-    
-    assert_equal(@default_locale.code, Locale.active.code)
+
+  ### LOCALE
+
+  def test_should_return_active_locale
+    assert_equal @default_locale.code, Locale.active.code
   end
-    
+
+  def test_should_always_return_active_locale
+    Locale.active = nil
+    assert_not_nil Locale.active
+    assert Locale.active?
+  end
+
+  def test_should_set_active_locale
+    Locale.set @italian_locale.code
+    assert_equal @italian_locale.code, Locale.active.code
+  end
+
   def test_should_load_locales_from_configuration_file
     Locale.load_locales
-    assert_equal(@languages, Locale.all)
+    assert_equal @languages, Locale.all
   end
 
   def test_should_raise_exception_for_missing_configured_languages
@@ -131,188 +109,148 @@ class ClickToGlobalizeTest < Test::Unit::TestCase
       assert_raise(NoConfiguredLocalesError) { Locale.load_locales }
     end
   end
-  
+
   def test_should_load_configured_base_language
     Locale.load_configured_base_language
     assert_equal(@default_locale.code, Locale.active.code)
   end
-  
-  def test_locale_set
-    assert_nil(Locale.send(:class_variable_get, :@@active))
-    
-    Locale.set(@italian_locale.code)
-    assert_not_nil(Locale.send(:class_variable_get, :@@active))
-    assert_not_nil(Locale.active)
-    
-    assert_not_nil(Locale.country)
-    assert_equal(@italian_locale.country.code, Locale.country.code)
-    
-    assert_not_equal(Locale.base_language, Locale.active.language)
-    assert_equal(@italian_locale.language.code, Locale.language_code)
-    
-    assert_equal(@italian_locale.code, Locale.active.code)
-  end
-  
-  def test_locale_method_aliases
-    assert(Locale.respond_to?(:__translate))
-    assert(Locale.respond_to?(:translate))
-  end
-  
-  def test_locale_observers
-    assert_kind_of(Set, Locale.observers)
-    
-    lo = LocaleObserver.new
-    assert(Locale.observers.empty?)
 
-    Locale.add_observer(lo)
-    assert_equal(1, Locale.observers.size)
-    
-    Locale.add_observer(lo) #re-add
-    assert_equal(1, Locale.observers.size)
-    
-    loo = lo.dup
-    Locale.add_observer(loo)
-    assert_equal(2, Locale.observers.size)
-    
-    Locale.notify_observers(@hello_world.tr_key, @hello_world.text)
-    Locale.observers.each do |observer|
-      assert_not_nil(observer.translations)
-      assert_equal(1, observer.translations.size)
-      assert_equal(@hello_world.text, observer.translations[@hello_world.tr_key])
-    end
-    
-    Locale.notify_observers(@ciao_mondo.tr_key, @ciao_mondo.text)
-    Locale.observers.each do |observer|
-      assert_not_nil(observer.translations)
-      assert_equal(1, observer.translations.size)
-      assert_equal(@ciao_mondo.text, observer.translations[@ciao_mondo.tr_key])
-    end
-    
-    Locale.remove_observer(loo)
-    assert_equal(1, Locale.observers.size)
-    Locale.remove_observer(loo) #delete again
-    assert_equal(1, Locale.observers.size)
-    
-    Locale.remove_observer(lo)
-    assert(Locale.observers.empty?)
+  def test_locale_method_aliases
+    assert Locale.respond_to?(:__translate)
+    assert Locale.respond_to?(:translate)
   end
-  
-  def test_locale_notify_with_nil_observer
-    assert(Locale.observers.empty?)
-    
-    Locale.add_observer(nil)
-    assert_equal(1, Locale.observers.size)
-    assert_raise(NoMethodError) { Locale.notify_observers(@hello_world.tr_key, @hello_world.text) }
-    
-    Locale.remove_observer(nil)
-    assert(Locale.observers.empty?)
-    assert_nothing_raised(NoMethodError) { Locale.notify_observers(@hello_world.tr_key, @hello_world.text) }
+
+  def test_locale_observers_should_be_a_set
+    assert_kind_of Set, Locale.observers
   end
-  
-  def test_locale_translate
-    assert(Locale.observers.empty?)
-    lo = LocaleObserver.new
-    loo = lo.dup
-    
-    Locale.add_observer(lo)
-    Locale.add_observer(loo)
-    assert_equal(2, Locale.observers.size)
-    
-    assert_not_nil(Locale.active)
-    assert_equal(@hello_world.text, @hello_world.tr_key.t)
-    
-    Locale.observers.each do |observer|
-      assert_not_nil(observer.translations)
-      assert_equal(1, observer.translations.size)
-      assert_equal(@hello_world.text, observer.translations[@hello_world.tr_key])
-    end
+
+  def test_should_add_observers
+    Locale.add_observer locale_observer
+    assert_any Locale.observers
+
+    Locale.add_observer locale_observer # re-add
+    assert_any Locale.observers
+
+    Locale.add_observer locale_observer.dup
+    assert_size_equal 2, Locale.observers
   end
-    
+
+  def test_should_remove_observers
+    Locale.add_observer locale_observer
+    assert_any Locale.observers
+
+    Locale.remove_observer locale_observer
+    assert_empty Locale.observers
+  end
+
+  def test_should_notify_observers
+    Locale.add_observer locale_observer
+    Locale.notify_observers @hello_world.tr_key, @hello_world.text
+
+    assert_equal({@hello_world.tr_key => @hello_world.text},
+      locale_observer.translations)
+  end
+
+  def test_should_observe_translate
+    Locale.add_observer locale_observer
+    @hello_world.tr_key.t
+
+    assert_equal({@hello_world.tr_key => @hello_world.text},
+      locale_observer.translations)
+  end
+
   def test_should_load_formatting_from_configuration_file
-    assert_equal(:textile, Locale.formatting)
+    assert_equal :textile, Locale.formatting
   end
 
   def test_textile
-    if Object.const_defined?(:RedCloth)
-      assert(Locale.textile?)
+    if installed? RedCloth
+      assert Locale.textile?
     else
-      assert(!Locale.textile?)
+      assert_not Locale.textile?
     end
   end
-  
+
   def test_markdown
-    if Object.const_defined?(:BlueCloth)
-      assert(Locale.markdown?)
+    if installed? BlueCloth
+      assert Locale.markdown?
     else
-      assert(!Locale.markdown?)
+      assert_not Locale.markdown?
     end
   end
+
+  ### HELPERS
   
-  # HELPERS
   def test_helper_partial
-    assert_equal(@click_partial, Helpers.click_partial)
+    assert_equal @click_partial, Helpers.click_partial
   end
-  
+
   def test_helper_authenticity_token_should_return_form_authenticity_token_when_protect_against_forgery_is_active
-    assert_equal('123', authenticity_token)
+    assert_equal self.form_authenticity_token, authenticity_token
   end
-  
+
   def test_helper_authenticity_token_should_return_empty_string_when_protect_against_forgery_is_not_active
     self.protect_against_forgery = false
-    assert_equal('', authenticity_token)
+    assert_empty authenticity_token
   end
-  
-  def ignore_test_helper_in_place_globalizer
-    flunk
-  end
-      
+
   def test_helper_languages
     Locale.all = @languages
-    assert_equal(@languages, languages)
+    assert_equal @languages, languages
   end
-  
-  def ignore_test_helper_languages_menu
-    flunk
+
+  def test_helper_languages_menu
+    get :index, params # make sure ActionView request cycle is active
+    expected = %(<ul><li><a href="/locales/set/en-US" title="* English [en-US]">* English</a></li> | <li><a href="/locales/set/it-IT" title="Italian [it-IT]">Italian</a></li></ul>)
+
+    assert_equal expected, languages_menu
   end
-  
-  # CONTROLLER
-  def test_controller_deprecated_globalize
-    assert @controller.class.globalize?
-  end
-  
+
+  ### CONTROLLER
+
   def test_controller_globalize
     assert @controller.globalize?
   end
-        
+
   def test_controller_observe_locale
-    get :index, {:key => @hello_world.tr_key, :language_id => 1, :locale => @default_locale.code}
+    get :index, params
     assert_response :success
 
-    assert_not_nil(@request.session[:__globalize_translations])
-    assert(!@request.session[:__globalize_translations].empty?)
-    assert_equal(1, @request.session[:__globalize_translations].size)
-    assert_equal(@hello_world.text, @request.session[:__globalize_translations][@hello_world.tr_key])
+    expected = { @hello_world.tr_key => @hello_world.text }
+    assert_any @request.session[:__globalize_translations]
+    assert_equal expected, @request.session[:__globalize_translations]
   end
-  
-  # LOCALE_CONTROLLER
+
+  ### LOCALE_CONTROLLER
   def test_check_globalize
-    assert(@locales_controller.send(:check_globalize))
+    assert @locales_controller.check_globalize
   end
-  
+
   def test_clear_cache
-    @locales_controller.send(:clear_cache)
-    assert_equal({}, Locale.send(:class_variable_get, :@@cache))
+    @locales_controller.clear_cache
+    assert_empty Locale.cache
   end
-  
+
   def test_inline
-    Locale.formatting = :textile
-    assert_equal(@inline[:textile], @locales_controller.send(:inline))
-    
-    Locale.formatting = :markdown
-    assert_equal(@inline[:markdown], @locales_controller.send(:inline)) if Locale.markdown?
+    with_formatting :textile do
+      assert_equal @inline[:textile], @locales_controller.inline
+    end
+
+    with_formatting :markdown do
+      assert_equal @inline[:markdown], @locales_controller.inline
+    end
   end
-  
+
   def protect_against_forgery?
     !!protect_against_forgery
   end
+
+  private
+    def locale_observer
+      @locale_observer ||= LocaleObserver.new
+    end
+
+    def params
+      { :key => @hello_world.tr_key, :language_id => 1, :locale => @default_locale.code }
+    end
 end
