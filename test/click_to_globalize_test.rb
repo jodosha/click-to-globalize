@@ -222,8 +222,9 @@ class ClickToGlobalizeTest < Test::Unit::TestCase
   end
 
   ### LOCALE_CONTROLLER
+
   def test_check_globalize
-    assert @locales_controller.check_globalize
+    assert @locales_controller.globalize?
   end
 
   def test_clear_cache

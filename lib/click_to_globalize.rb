@@ -142,8 +142,7 @@ module Globalize # :nodoc:
     
     # Render +app/views/shared/_click_to_globalize.html.erb+.
     def click_to_globalize
-      # Note: controller.class.globalize? is deprecated.
-      return unless controller.globalize? && controller.class.globalize?
+      return unless controller.globalize?
       render @@click_partial
     end
     
@@ -213,32 +212,14 @@ module Globalize # :nodoc:
                                              end
       end
     end
-    
-    module SingletonMethods      
-      # Checks if the application is in globalization mode.
-      #
-      # Override this method in your controllers for custom conditions.
-      #
-      # Example:
-      #
-      #   def self.globalize?
-      #     current_user.admin?
-      #   end
-      #
-      # Note: this method is deprecated in favor of globalize?.
-      def globalize?
-        true
-      end
-    end
   end
 end
 
-ActionView::Base.class_eval do
+ActionView::Base.class_eval do #:nodoc:
   include Globalize::Helpers
 end
 
-ActionController::Base.class_eval do # :nodoc:
-  extend Globalize::Controller::SingletonMethods
+ActionController::Base.class_eval do #:nodoc:
   include Globalize::Controller::InstanceMethods
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::SanitizeHelper

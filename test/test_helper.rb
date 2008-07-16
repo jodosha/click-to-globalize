@@ -53,7 +53,7 @@ class Test::Unit::TestCase
 end
 
 LocalesController.class_eval do #:nodoc:
-  public :check_globalize, :clear_cache, :inline
+  public :clear_cache, :inline
 end
 
 ApplicationHelper.class_eval do #:nodoc:
