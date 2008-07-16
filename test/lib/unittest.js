@@ -34,7 +34,7 @@ Event.simulateMouse = function(element, eventName) {
     options.buttons, options.pointerX, options.pointerY, options.pointerX, options.pointerY, 
     false, false, false, false, 0, $(element));
   
-  if(this.mark) Element.remove(this.mark);
+  if (this.mark) Element.remove(this.mark);
   
   var style = 'position: absolute; width: 5px; height: 5px;' + 
     'top: #{pointerY}px; left: #{pointerX}px;'.interpolate(options) + 
@@ -44,7 +44,7 @@ Event.simulateMouse = function(element, eventName) {
   this.mark.appendChild(document.createTextNode(" "));
   document.body.appendChild(this.mark);
   
-  if(this.step)
+  if (this.step)
     alert('['+new Date().getTime().toString()+'] '+eventName+'/'+Test.Unit.inspect(options));
   
   $(element).dispatchEvent(oEvent);
@@ -71,7 +71,7 @@ Event.simulateKey = function(element, eventName) {
 };
 
 Event.simulateKeys = function(element, command) {
-  for(var i=0; i<command.length; i++) {
+  for (var i=0; i<command.length; i++) {
     Event.simulateKey(element,'keypress',{charCode:command.charCodeAt(i)});
   }
 };
@@ -216,7 +216,7 @@ Test.Unit.Runner = Class.create({
     if (!test) return this.finish();
     if (!test.isWaiting) this.logger.start(test.name);
     test.run();
-    if(test.isWaiting) {
+    if (test.isWaiting) {
       this.logger.message("Waiting for " + test.timeToWait + "ms");
       setTimeout(this.runTests.bind(this), test.timeToWait || 1000);
       return;
@@ -433,9 +433,9 @@ Test.Unit.Assertions = {
   
   _isVisible: function(element) {
     element = $(element);
-    if(!element.parentNode) return true;
+    if (!element.parentNode) return true;
     this.assertNotNull(element);
-    if(element.style && Element.getStyle(element, 'display') == 'none')
+    if (element.style && Element.getStyle(element, 'display') == 'none')
       return false;
     
     return arguments.callee.call(this, element.parentNode);
@@ -504,7 +504,7 @@ Test.Unit.Testcase = Class.create(Test.Unit.Assertions, {
         this.isWaiting = false;
         this.test();
       } finally {
-        if(!this.isWaiting) {
+        if (!this.isWaiting) {
           this.teardown();
         }
       }

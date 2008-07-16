@@ -86,9 +86,7 @@ class IEBrowser < Browser
       ie = WIN32OLE.new('InternetExplorer.Application')
       ie.visible = true
       ie.Navigate(url)
-      while ie.ReadyState != 4 do
-        sleep(1)
-      end
+      sleep 0.01 while ie.Busy || ie.ReadyState != 4
     end
   end
 
@@ -291,7 +289,7 @@ class JavaScriptTestTask < ::Rake::TaskLib
 
   def define
     task @name do
-      trap("INT") { @server.shutdown }
+      trap("INT") { @server.shutdown; exit }
       t = Thread.new { @server.start }
       
       # run all combinations of browsers and tests
