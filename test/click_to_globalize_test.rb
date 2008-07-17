@@ -30,7 +30,6 @@ class ClickToGlobalizeTest < Test::Unit::TestCase
     # TODO load w/ #inject
     @hello_world  = Translation.find(1)
     @ciao_mondo   = Translation.find(2)
-    @good_morning = Translation.find(3)
 
     @default_locale = Locale.new('en-US')
     @italian_locale = Locale.new('it-IT')
@@ -218,8 +217,8 @@ class ClickToGlobalizeTest < Test::Unit::TestCase
     assert_response :success
 
     expected = { @hello_world.tr_key => @hello_world.text }
-    assert_any @request.session[:__globalize_translations]
-    assert_equal expected, @request.session[:__globalize_translations]
+    assert_any translations
+    assert_equal expected, translations
   end
 
   def test_should_return_formatted_translations
@@ -229,7 +228,7 @@ class ClickToGlobalizeTest < Test::Unit::TestCase
       assert_response :success
       
       expected = { 'hello_mars' => %(<strong>Hello Mars!</strong>) }
-      assert_equal expected, @request.session[:__globalize_translations]
+      assert_equal expected, translations
     end
   end
 
@@ -242,7 +241,7 @@ class ClickToGlobalizeTest < Test::Unit::TestCase
         assert_response :success
 
         expected = { 'hello_moon' => '*Hello Moon!*' }
-        assert_equal expected, @request.session[:__globalize_translations]      
+        assert_equal expected, translations
       end
     end
   end
@@ -279,6 +278,10 @@ class ClickToGlobalizeTest < Test::Unit::TestCase
 
     def params(options = {})
       { :key => @hello_world.tr_key, :language_id => 1, :locale => @default_locale.code }.merge!(options)
+    end
+    
+    def translations
+      @request.session[:__globalize_translations]
     end
     
     def create_translation(key, text)
