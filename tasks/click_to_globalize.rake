@@ -91,7 +91,7 @@ namespace :click do
     end
     
     puts "\nClick to Globalize was correctly installed.\n" +
-      "\nAdd to ApplicationController\n\taround_filter :observe_locale\n" +
+      "\nAdd to ApplicationController\n\taround_filter :observe_locales\n" +
       "\nRemember to edit config/click.yml to add your locales.\n\n"
   end
   

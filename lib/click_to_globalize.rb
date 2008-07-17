@@ -202,7 +202,7 @@ module Globalize # :nodoc:
       # It's used as around_filter method, to add a <tt>LocaleObserver</tt> while the
       # request is processed.
       # <tt>LocaleObserver</tt> catches all translations and pass them to the session.
-      def observe_locale
+      def observe_locales
         return unless globalize?
         locale_observer = LocaleObserver.new
         Globalize::Locale.add_observer(locale_observer)

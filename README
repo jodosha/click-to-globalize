@@ -25,7 +25,7 @@ Check for news and tutorials at the {project home page}[http://www.lucaguidi.com
    rake click:setup
 
 3. Add to ApplicationController:
-   around_filter :observe_locale
+   around_filter :observe_locales
 
 4. Edit config/click.yml
 
@@ -80,7 +80,7 @@ Check for news and tutorials at the {project home page}[http://www.lucaguidi.com
      formatting: textile
 
 8. Add to ApplicationController:
-   around_filter :observe_locale
+   around_filter :observe_locales
 
 9. Personalize the access to the globalization features, overriding #globalize:
    class ApplicationController < ActionController::Base

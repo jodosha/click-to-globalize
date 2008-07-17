@@ -212,7 +212,7 @@ class ClickToGlobalizeTest < Test::Unit::TestCase
     assert @controller.globalize?
   end
 
-  def test_controller_observe_locale
+  def test_controller_observe_locales
     get :index, params
     assert_response :success
 
