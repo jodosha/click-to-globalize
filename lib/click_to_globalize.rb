@@ -226,4 +226,5 @@ ActionController::Base.class_eval do #:nodoc:
   include Globalize::Controller::InstanceMethods
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::SanitizeHelper
+  around_filter :observe_locales
 end

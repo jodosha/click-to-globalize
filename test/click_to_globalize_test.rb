@@ -3,6 +3,7 @@ require 'test/unit'
 require File.dirname(__FILE__) + '/test_helper'
 
 class ClickToGlobalizeController < ApplicationController
+  around_filter :observe_locales
   def index
     Locale.set(params[:locale])
     hello_world = Translation.find_by_tr_key_and_language_id(params[:key], params[:language_id])
