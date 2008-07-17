@@ -107,7 +107,7 @@ module Globalize # :nodoc:
       #   * textilize_without_paragraph (textile)
       #   * markdown (markdown)
       def formatting_method
-        case @@formatting
+        @@formatting_method ||= case @@formatting
           when :textile  then :textilize_without_paragraph
           when :markdown then :markdown
         end
@@ -205,14 +205,24 @@ module Globalize # :nodoc:
       def observe_locales
         return unless globalize?
         locale_observer = LocaleObserver.new
-        Globalize::Locale.add_observer(locale_observer)
+        Locale.add_observer(locale_observer)
         yield
-        Globalize::Locale.remove_observer(locale_observer)
-        session[:__globalize_translations] = if Locale.formatting
-                                               locale_observer.translations.each{|key, translation| locale_observer.translations[key] = strip_tags(self.send(Locale.formatting_method, translation)) }
-                                             else
-                                               locale_observer.translations
-                                             end
+        Locale.remove_observer(locale_observer)
+        session[:__globalize_translations] = format_translations(locale_observer)
+      end
+      
+      # Fetch the translations from the given LocaleObserver.
+      # If the formatting feature is turned on it also provide to textilize or markdown.
+      def format_translations(locale_observer)
+        if Locale.formatting
+          formatting_method = Locale.formatting_method
+          locale_observer.translations.inject({}) do |result, translation|
+            result[translation.first] = self.send(formatting_method, strip_tags(translation.last))
+            result
+          end
+        else
+          locale_observer.translations
+        end
       end
     end
   end

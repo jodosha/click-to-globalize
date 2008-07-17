@@ -6,8 +6,8 @@ class ClickToGlobalizeController < ApplicationController
   around_filter :observe_locales
   def index
     Locale.set(params[:locale])
-    hello_world = Translation.find_by_tr_key_and_language_id(params[:key], params[:language_id])
-    @greet = hello_world.tr_key.t
+    translation = Translation.find_by_tr_key_and_language_id(params[:key], params[:language_id])
+    @greet = translation.tr_key.t
     render :nothing => true, :status => 200
   end
 end
@@ -222,6 +222,31 @@ class ClickToGlobalizeTest < Test::Unit::TestCase
     assert_equal expected, @request.session[:__globalize_translations]
   end
 
+  def test_should_return_formatted_translations
+    create_translation('hello_mars', '*Hello Mars!*')
+    with_formatting :textile do
+      get :index, params(:key => 'hello_mars')
+      assert_response :success
+      
+      expected = { 'hello_mars' => %(<strong>Hello Mars!</strong>) }
+      assert_equal expected, @request.session[:__globalize_translations]
+    end
+  end
+
+  uses_mocha 'ClickToGlobalizeFormattingTest' do
+    def test_should_return_plain_translations
+      Locale.stubs(:formatting).returns nil
+      create_translation('hello_moon', '*Hello Moon!*')
+      with_formatting :unexistent do
+        get :index, params(:key => 'hello_moon')
+        assert_response :success
+
+        expected = { 'hello_moon' => '*Hello Moon!*' }
+        assert_equal expected, @request.session[:__globalize_translations]      
+      end
+    end
+  end
+
   ### LOCALE_CONTROLLER
 
   def test_check_globalize
@@ -252,7 +277,15 @@ class ClickToGlobalizeTest < Test::Unit::TestCase
       @locale_observer ||= LocaleObserver.new
     end
 
-    def params
-      { :key => @hello_world.tr_key, :language_id => 1, :locale => @default_locale.code }
+    def params(options = {})
+      { :key => @hello_world.tr_key, :language_id => 1, :locale => @default_locale.code }.merge!(options)
+    end
+    
+    def create_translation(key, text)
+      translation = Translation.new(:tr_key => key, :text => text,
+        :language_id => 1, :pluralization_index => 1) do |t|
+        t.type = 'ViewTranslation'
+      end
+      translation.save
     end
 end

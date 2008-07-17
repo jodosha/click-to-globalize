@@ -52,6 +52,15 @@ class Test::Unit::TestCase
   end
 end
 
+# Thanks to Rails Core Team
+def uses_mocha(description)
+  require 'rubygems'
+  require 'mocha'
+  yield
+rescue LoadError
+  $stderr.puts "Skipping #{description} tests. `gem install mocha` and try again."
+end
+
 LocalesController.class_eval do #:nodoc:
   public :clear_cache, :inline
 end
