@@ -24,18 +24,15 @@ Check for news and tutorials at the {project home page}[http://www.lucaguidi.com
    $ ./script/plugin install git://github.com/jodosha/click-to-globalize.git
    rake click:setup
 
-3. Add to ApplicationController:
-   around_filter :observe_locales
+3. Edit config/click.yml
 
-4. Edit config/click.yml
-
-5. Add at the end of your layout the following code:
+4. Add at the end of your layout the following code:
    <%= click_to_globalize -%>
 
-6. Put in your view:
+5. Put in your view:
    <%= 'hello_world'.t %>
 
-7. Start your server and click to globalize.
+6. Start your server and click to globalize.
 
 
 
@@ -79,10 +76,7 @@ Check for news and tutorials at the {project home page}[http://www.lucaguidi.com
    or markdown (BlueCloth). Edit config/click.yml
      formatting: textile
 
-8. Add to ApplicationController:
-   around_filter :observe_locales
-
-9. Personalize the access to the globalization features, overriding #globalize:
+8. Personalize the access to the globalization features, overriding #globalize:
    class ApplicationController < ActionController::Base
      def globalize?
        current_user.admin?
@@ -91,7 +85,7 @@ Check for news and tutorials at the {project home page}[http://www.lucaguidi.com
    
    NOTE: #globalize? is method to turn on/off all the Click to Globalize features.
 
-10. Add at the end of your layout the following code:
+9. Add at the end of your layout the following code:
    <%= click_to_globalize -%>
 
 
@@ -132,7 +126,7 @@ Check for news and tutorials at the {project home page}[http://www.lucaguidi.com
   security problems (i.e. XSS).
   <%= textilize(h('some_text'.t)) %>
 
-
+* The official Globalize repository is still *not compatible with Rails 2.1*, use the {heythisisnate's fork}[http://github.com/heythisisnate/globalize/tree] instead.
   
 = Contribute
 
@@ -142,7 +136,7 @@ Check for news and tutorials at the {project home page}[http://www.lucaguidi.com
 
 * Create a ticket to the {Sushistar Lighthouse page}[http://sushistar.lighthouseapp.com]
 
-* Create a patch and add as attachement to the ticket.
+* Create a patch and add as attachment to the ticket.
 
 
 

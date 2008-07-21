@@ -2,7 +2,7 @@ author: Luca Guidi
 email: guidi.luca@gmail.com
 homepage: http://lucaguidi.com/pages/click-to-globalize
 summary: Globalization made easy with interface in place translations
-description: Click to Globalize is an extension for Globalize which allows in place translation for your views.
+description: Click to Globalize is an extension for Globalize which allow in place translation for your views.
 license: MIT
 rails_version: 1.2.3+
-version: 0.3.1
+version: 0.4.0
