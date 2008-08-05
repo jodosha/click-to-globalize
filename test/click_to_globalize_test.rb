@@ -232,6 +232,16 @@ class ClickToGlobalizeTest < Test::Unit::TestCase
     end
   end
 
+  uses_mocha 'ClickToGlobalizeAroundFilterTest' do
+    def test_should_always_yield_action_even_if_globalize_returns_false
+      @controller.expects(:globalize?).returns false
+      
+      get :index, params
+      assert_response :success      
+      assert_nil translations
+    end
+  end
+
   uses_mocha 'ClickToGlobalizeFormattingTest' do
     def test_should_return_plain_translations
       Locale.stubs(:formatting).returns nil

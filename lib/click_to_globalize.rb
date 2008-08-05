@@ -203,12 +203,15 @@ module Globalize # :nodoc:
       # request is processed.
       # <tt>LocaleObserver</tt> catches all translations and pass them to the session.
       def observe_locales
-        return unless globalize?
-        locale_observer = LocaleObserver.new
-        Locale.add_observer(locale_observer)
-        yield
-        Locale.remove_observer(locale_observer)
-        session[:__globalize_translations] = format_translations(locale_observer)
+        unless globalize?
+          yield
+        else
+          locale_observer = LocaleObserver.new
+          Locale.add_observer(locale_observer)
+          yield
+          Locale.remove_observer(locale_observer)
+          session[:__globalize_translations] = format_translations(locale_observer)
+        end
       end
       
       # Fetch the translations from the given LocaleObserver.
