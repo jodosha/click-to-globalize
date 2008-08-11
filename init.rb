@@ -10,8 +10,10 @@ end
 Object.send :include, Globalize
 require 'click_to_globalize'
 
-# FIXME
 unless RAILS_ENV == 'test'
+  # FIXME
   Locale.load_configured_base_language
   raise NoBaseLanguageError if Locale.base_language.blank?
+else
+  require File.dirname(__FILE__) + '/test/assertions'
 end
