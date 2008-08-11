@@ -13,10 +13,6 @@ class Test::Unit::TestCase
   #     get :index
   #     assert_translated :english, :italian # assert only English and Italian
   #   end
-  #
-  #  Note: The research will be performed on the *development* database,
-  #  because the test database will never be filled with all the translations,
-  #  but only with a subset.
   def assert_translated(*languages)
     languages = normalize_languages!(languages)
     languages.each do |language_name, code|
@@ -61,10 +57,6 @@ class Test::Unit::TestCase
     def expected_translations #:nodoc:
       @expected_translations ||= session[:__translations]
     end
-end
-
-class Globalize::ViewTranslation #:nodoc:
-  self.connection = self.configurations['development']
 end
 
 class ApplicationController #:nodoc:
