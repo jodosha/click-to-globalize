@@ -10,5 +10,8 @@ end
 Object.send :include, Globalize
 require 'click_to_globalize'
 
-Locale.load_configured_base_language
-raise NoBaseLanguageError if Locale.base_language.blank?
+# FIXME
+unless RAILS_ENV == 'test'
+  Locale.load_configured_base_language
+  raise NoBaseLanguageError if Locale.base_language.blank?
+end
