@@ -1,4 +1,4 @@
-class Test::Unit::TestCase
+class ActiveSupport::TestCase
   # Assert the current action has all the labels translated for all given languages.
   #
   # Example:

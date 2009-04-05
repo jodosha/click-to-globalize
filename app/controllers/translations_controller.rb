@@ -1,4 +1,4 @@
-class LocalesController < ApplicationController
+class TranslationsController < ApplicationController
   before_filter :globalize?, :clear_cache
 
   def set

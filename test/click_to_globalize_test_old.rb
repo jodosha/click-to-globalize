@@ -1,6 +1,4 @@
-require 'test/test_helper'
-require 'test/unit'
-require File.dirname(__FILE__) + '/test_helper'
+require File.expand_path(File.dirname(__FILE__) + "/test_helper") # TODO fix path
 
 class ClickToGlobalizeController < ApplicationController
   around_filter :observe_locales
@@ -13,7 +11,7 @@ class ClickToGlobalizeController < ApplicationController
 end
 module ClickToGlobalizeHelper; end
 
-class ClickToGlobalizeTest < Test::Unit::TestCase
+class ClickToGlobalizeTest < ActiveSupport::TestCase
   ActiveRecord::Base.store_full_sti_class = false
   include ApplicationHelper
   include ActionView::Helpers::UrlHelper
@@ -42,7 +40,7 @@ class ClickToGlobalizeTest < Test::Unit::TestCase
                 :markdown => 'markdown( @formatted_value )',
                 :other    => '@formatted_value' }
 
-    @locales_controller = LocalesController.new
+    @locales_controller = TranslationsController.new
 
     @controller = ClickToGlobalizeController.new
     @request    = ActionController::TestRequest.new
