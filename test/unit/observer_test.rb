@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../test_helper')
 
 class FakeActionView
   def translate(key, options = {})
-    I18n.translate(key, options).stringify_keys
+    I18n.translate key, options
   end
 
   include Click::Observer::View
@@ -38,7 +38,7 @@ class ObserverTest < ActiveSupport::TestCase
 
   test "should observe translate" do
     template.add_observer locale_observer
-    template.translate :hello_world
+    template.translate "hello_world"
     assert_equal({"hello_world" => "Hello, World!"}, locale_observer.translations)
   end
 
