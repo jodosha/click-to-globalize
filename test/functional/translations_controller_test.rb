@@ -52,11 +52,6 @@ class AnApplicationControllerTest < ActionController::TestCase
   end
 
   private
-    def load_translations
-      I18n.backend = I18n::Backend::Simple.new
-      I18n.backend.store_translations :en, { :hello_world => "Hello, World!" }
-    end
-
     def params(options = {})
       { :locale => "en" }.merge!(options)
     end
