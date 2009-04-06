@@ -76,46 +76,22 @@ namespace :click do
 
   desc 'Setup Click to Globalize plugin (alias for click:install).'
   task :setup => :install
-  
+
   desc 'Install Click to Globalize plugin.'
   task :install do
-    # Create the app/views/shared, if needed.
-    FileUtils.mkdir(shared_folder) unless File.directory?(shared_folder)
+    target = "#{Rails.root}/public/"
+    source = Dir["vendor/plugins/click-to-globalize/assets/*"]
 
-    # Copy Click To Globalize files.
-    files.each do |path|
-      file = path.split(File::SEPARATOR).last
-      printf "Copying #{file} ... "
-      File.cp File.join(templates_root, file), path
-      puts 'DONE'
-    end
-    
-    puts "\nClick to Globalize was correctly installed." +
-      "\nRemember to edit config/click.yml to add your locales.\n\n"
+    FileUtils.mkdir_p(target) unless File.directory?(target)
+    FileUtils.cp_r source, target
   end
-  
+
   desc 'Uninstall Click to Globalize plugin.'
   task :uninstall do
-    # Delete Click To Globalize files.
-    files.each do |path|
-      file = path.split(File::SEPARATOR).last
-      exists = File.exists?(path)
-      printf "Deleting #{file} ... "
-      File.delete path if exists
-      puts exists ? 'DONE' : 'SKIPPED'
-    end
-
-    # Remove app/views/shared, if exists and empty.
-    if File.exists? shared_folder
-      printf 'Deleting app/views/shared ... '
-      empty = Dir[shared_folder+'/*'].entries.empty?
-      Dir.rmdir(shared_folder) if empty
-      puts   empty ? 'DONE' : 'SKIPPED'  
-    end
-    
-    puts "\nClick to Globalize was correctly uninstalled."
+    targets = Dir["#{Rails.root}/public/**/click_to_globalize.*"]
+    FileUtils.rm targets
   end
-  
+
   desc 'Show the diffs for each file, camparing the app files with the plugin ones.'
   task :diff do
     files.each do |file, path|
