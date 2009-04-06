@@ -1,9 +1,9 @@
 module ClickToGlobalizeHelper
-  @@click_partial = 'shared/_click_to_globalize'
+  @@click_partial = File.expand_path(File.dirname(__FILE__) + "/../views/shared/_click_to_globalize.html.erb")
 
   # Render +app/views/shared/_click_to_globalize.html.erb+.
   def click_to_globalize
-    render @@click_partial if controller.globalize?
+    render :file => @@click_partial if globalize?
   end
 
   # Get form_authenticity_token if the application is protected from forgery.

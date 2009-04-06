@@ -13,7 +13,7 @@ module Click
 
       module InstanceMethods
         protected
-          def render_with_observe(options = nil, extra_options = {}, &block)        
+          def render_with_observe(options = nil, extra_options = {}, &block)
             locale_observer = Click::Observer::LocaleObserver.new
             @template.add_observer locale_observer
             render_without_observe(options, extra_options, &block)
@@ -77,6 +77,9 @@ module Click
   module Controller
     def self.included(recipient)
       recipient.send :include, InstanceMethods
+      recipient.class_eval do
+        helper_method :globalize?
+      end
     end
 
     module InstanceMethods

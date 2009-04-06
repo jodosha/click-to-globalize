@@ -15,14 +15,21 @@ class ActiveSupport::TestCase
 end
 
 class ActionView::TestCase
+  # HACK all this methods are placeholders, dunno why they aren't included by default
   private
-    # HACK this is a placehoder, dunno why it isn't included by default
     def protect_against_forgery?
       false
     end
 
-    # HACK this is a placehoder, dunno why it isn't included by default
     def form_authenticity_token
       "hack"
+    end
+
+    def render(options = nil, extra_options = {}, &block)
+      ActionView::Base.new.render options, extra_options, &block
+    end
+
+    def globalize?
+      ApplicationController.new.globalize?
     end
 end
