@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../../test_helper')
 
 class HelperTest < ActionView::TestCase
   test "implement me" do
-    assert false
+    flunk
   end
 
   # test "authenticity_token with protection from forgery active" do

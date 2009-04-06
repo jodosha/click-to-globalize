@@ -1,12 +1,28 @@
 require File.expand_path(File.dirname(__FILE__) + '/../test_helper')
 
+TranslationsController.class_eval do
+  before_filter do |controller|
+    controller.request.session[:__globalize_translations] = { "hello_world" => "Hello, World!" }
+  end
+end
+
 class TranslationsControllerTest < ActionController::TestCase
   test "should have translation mode enabled by default" do
     assert @controller.globalize?
   end
 
-  test "should clear globalize cache" do
+  test "should return session translations" do
+    get :index, {}, :format => :json
+    assert_response :success
+    assert_equal "{\"hello_world\": \"Hello, World!\"}", @response.body
+  end
+
+  test "should save translations" do
     flunk
+    post :save, { :key => "help", :text => "Help!" }, :format => :js
+    assert_response :success
+    assert_equal "Help!", @response.body
+    assert_equal "Help!", I18n.t(:help)
   end
 end
 
