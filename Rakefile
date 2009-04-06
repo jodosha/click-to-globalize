@@ -1,20 +1,11 @@
 require 'rake'
 require 'rake/testtask'
 require 'rake/rdoctask'
+require 'ftools'
+require 'test/javascript/lib/jstest'
 
-rails_root     = File.expand_path(RAILS_ROOT)
-plugin_root    = File.join(rails_root, 'vendor', 'plugins', 'click-to-globalize')
-templates_root = File.join(plugin_root, 'templates')
-shared_folder  = File.join(rails_root, 'app', 'views', 'shared')
-
-require plugin_root + '/test/javascript/lib/jstest'
-
-files = [ File.join(rails_root, 'public', 'javascripts', 'click_to_globalize.js'),
-  File.join(rails_root, 'public', 'stylesheets', 'click_to_globalize.css'),
-  File.join(rails_root, 'app',     'controllers', 'locales_controller.rb'),
-  File.join(rails_root, 'app',     'helpers',     'locales_helper.rb'),
-  File.join(rails_root, 'app',     'views',       'shared', '_click_to_globalize.html.erb'),
-  File.join(rails_root, 'config', 'click.yml') ]
+# rails_root = File.expand_path(File.readlink(File.dirname(__FILE__)) + "/../../..")
+rails_root = "/Users/luca/demo/test_click"
 
 desc 'Default: run unit tests.'
 task :default => :test
@@ -45,9 +36,9 @@ namespace :test do
 
   desc 'Test ruby code.'
   Rake::TestTask.new(:ruby) do |t|
-    t.libs << "#{plugin_root}/lib"
-    t.libs << "#{plugin_root}/test/test_helper"
-    t.pattern = "#{plugin_root}/test/**/*_test.rb"
+    t.libs << "lib"
+    t.libs << "test/test_helper"
+    t.pattern = "test/**/*_test.rb"
     t.verbose = true
   end
 
@@ -58,11 +49,10 @@ namespace :test do
     browsers_to_test = ENV['BROWSERS'] && ENV['BROWSERS'].split(',')
 
     t.mount("/public", "#{rails_root}/public")
-    t.mount("/test", "#{plugin_root}/test")
+    t.mount("/test", "test/javascript")
 
-    test_files = (Dir["#{plugin_root}/test/unit/*.html"] + Dir["#{plugin_root}/test/functional/*.html"])
+    test_files = (Dir["test/javascript/unit/*.html"] + Dir["test/javascript/functional/*.html"])
     test_files.sort.reverse.each do |test_file|
-      test_file = test_file.gsub(plugin_root, '')
       test_name = test_file[/.*\/(.+?)\.html/, 1]
       t.run(test_file) unless tests_to_run && !tests_to_run.include?(test_name)
     end
@@ -75,14 +65,14 @@ end
 
 desc 'Show the diffs for each file, camparing the app files with the plugin ones.'
 task :diff do
-  files.each do |file, path|
-    file = path.split(File::SEPARATOR).last
-    res  = `diff #{path} #{templates_root}/#{file}`
-    puts "#{file.upcase}\n#{res}" unless res.empty?
+  %w{ javascripts/click_to_globalize.js stylesheets/click_to_globalize.css }.each do |file|
+    puts "\n\n#{file}\n#{'*' * 80}\n"
+    `diff #{rails_root}/public/#{file} assets/#{file}`
   end
 end
 
 desc 'Prepare the folder plugin, copying files from the app, here.'
 task :prepare do
-  files.each { |file, path| File.cp path, templates_root }
+  sources = Dir["#{rails_root}/public/**/click_to_globalize.*"]
+  FileUtils.cp_r sources, "assets/"
 end
