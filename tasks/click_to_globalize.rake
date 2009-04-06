@@ -1,79 +1,9 @@
 require 'rake'
 require 'rake/testtask'
 require 'rake/rdoctask'
-require 'erb'
-require 'rubygems'
-require 'active_record'
-require 'active_record/fixtures'
 require 'ftools'
 
-rails_root     = File.expand_path(RAILS_ROOT)
-plugin_root    = File.join(rails_root, 'vendor', 'plugins', 'click-to-globalize')
-templates_root = File.join(plugin_root, 'templates')
-shared_folder  = File.join(rails_root, 'app', 'views', 'shared')
-
-require plugin_root + '/test/javascript/lib/jstest'
-
-files = [ File.join(rails_root, 'public', 'javascripts', 'click_to_globalize.js'),
-  File.join(rails_root, 'public', 'stylesheets', 'click_to_globalize.css'),
-  File.join(rails_root, 'app',     'controllers', 'locales_controller.rb'),
-  File.join(rails_root, 'app',     'helpers',     'locales_helper.rb'),
-  File.join(rails_root, 'app',     'views',       'shared', '_click_to_globalize.html.erb'),
-  File.join(rails_root, 'config', 'click.yml') ]
-
-desc 'Default: run click task.'
-task :default => :click
-
-desc 'Run tests.'
-task :click => ['click:test']
-
 namespace :click do
-  desc 'Test Click To Globalize.'
-  task :test => ['click:test:all']
-  
-  namespace :test do
-    desc 'Test both ruby and javascript code.'
-    task :all => [:ruby, :js]
-
-    desc 'Test ruby code.'
-    Rake::TestTask.new(:ruby) do |t|
-      t.libs << "#{plugin_root}/lib"
-      t.libs << "#{plugin_root}/test/test_helper"
-      t.pattern = "#{plugin_root}/test/**/*_test.rb"
-      t.verbose = true
-    end
-
-    # Taken from Prototype rake tasks.
-    desc "Runs all the JavaScript unit tests and collects the results"
-    JavaScriptTestTask.new(:js) do |t|
-      tests_to_run     = ENV['TESTS']    && ENV['TESTS'].split(',')
-      browsers_to_test = ENV['BROWSERS'] && ENV['BROWSERS'].split(',')
-
-      t.mount("/public", "#{rails_root}/public")
-      t.mount("/test", "#{plugin_root}/test")
-
-      test_files = (Dir["#{plugin_root}/test/unit/*.html"] + Dir["#{plugin_root}/test/functional/*.html"])
-      test_files.sort.reverse.each do |test_file|
-        test_file = test_file.gsub(plugin_root, '')
-        test_name = test_file[/.*\/(.+?)\.html/, 1]
-        t.run(test_file) unless tests_to_run && !tests_to_run.include?(test_name)
-      end
-
-      %w( safari firefox ie konqueror opera ).each do |browser|
-        t.browser(browser.to_sym) unless browsers_to_test && !browsers_to_test.include?(browser)
-      end
-    end
-    
-    desc 'Generate documentation for Click to Globalize plugin.'
-    Rake::RDocTask.new(:rdoc) do |rdoc|
-      rdoc.rdoc_dir = "#{plugin_root}/rdoc"
-      rdoc.title    = 'ClickToGlobalize'
-      rdoc.options << '--line-numbers' << '--inline-source'
-      rdoc.rdoc_files.include("#{plugin_root}/README")
-      rdoc.rdoc_files.include("#{plugin_root}/lib/**/*.rb")
-    end
-  end
-
   desc 'Setup Click to Globalize plugin (alias for click:install).'
   task :setup => :install
 
@@ -90,19 +20,5 @@ namespace :click do
   task :uninstall do
     targets = Dir["#{Rails.root}/public/**/click_to_globalize.*"]
     FileUtils.rm targets
-  end
-
-  desc 'Show the diffs for each file, camparing the app files with the plugin ones.'
-  task :diff do
-    files.each do |file, path|
-      file = path.split(File::SEPARATOR).last
-      res  = `diff #{path} #{templates_root}/#{file}`
-      puts "#{file.upcase}\n#{res}" unless res.empty?
-    end
-  end
-
-  desc 'Prepare the folder plugin, copying files from the app, here.'
-  task :prepare do
-    files.each { |file, path| File.cp path, templates_root }
   end
 end
