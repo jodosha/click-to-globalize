@@ -12,7 +12,7 @@ class TranslationsController < ApplicationController
     I18n.backend.store_translations I18n.locale, { params[:key] => params[:value] }
 
     respond_to do |format|
-      format.js { render :inline => params[:value], :layout => false, :status => :ok }
+      format.js { render :text => params[:value], :layout => false, :status => :ok }
     end
   end
 end

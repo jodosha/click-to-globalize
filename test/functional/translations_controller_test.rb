@@ -25,8 +25,7 @@ class TranslationsControllerTest < ActionController::TestCase
   end
 
   test "should save translations" do
-    flunk
-    post :save, { :key => "help", :text => "Help!" }, :format => :js
+    xhr :post, :save, { :key => "help", :value => "Help!" }
     assert_response :success
     assert_equal "Help!", @response.body
     assert_equal "Help!", I18n.t(:help)
