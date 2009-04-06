@@ -11,6 +11,13 @@ class TranslationsControllerTest < ActionController::TestCase
     assert @controller.globalize?
   end
 
+  test "routing" do
+    assert_routing({ :method => :get,  :path => "/translations" },
+      :controller => "translations", :action => "index" )
+    assert_routing({ :method => :post, :path => "/translations/save" },
+      :controller => "translations", :action => "save" )
+  end
+
   test "should return session translations" do
     get :index, {}, :format => :json
     assert_response :success
