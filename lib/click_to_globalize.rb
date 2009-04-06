@@ -78,13 +78,29 @@ module Click
     def self.included(recipient)
       recipient.send :include, InstanceMethods
       recipient.class_eval do
-        helper_method :globalize?
+        helper_method :in_place_translations?
       end
     end
 
     module InstanceMethods
+      include ActiveSupport::Deprecation
+
       # This is the <b>on/off</b> switch for the Click to Globalize features.
       # Override this method in your controllers for custom conditions.
+      #
+      # Example:
+      #
+      #   def in_place_translations?
+      #     current_user.admin?
+      #   end
+      def in_place_translations?
+        true
+      end
+
+      # This is the <b>on/off</b> switch for the Click to Globalize features.
+      # Override this method in your controllers for custom conditions.
+      #
+      # NOTICE: this method has been deprecated in favor of <tt>in_place_translations?</tt>
       #
       # Example:
       #
@@ -92,6 +108,7 @@ module Click
       #     current_user.admin?
       #   end
       def globalize?
+        ::ActiveSupport::Deprecation.warn("You should use in_place_translations?", caller)
         true
       end
     end

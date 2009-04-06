@@ -29,7 +29,7 @@ class ActionView::TestCase
       ActionView::Base.new.render options, extra_options, &block
     end
 
-    def globalize?
-      ApplicationController.new.globalize?
+    def in_place_translations?
+      ApplicationController.new.in_place_translations?
     end
 end

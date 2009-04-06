@@ -8,7 +8,7 @@ end
 
 class TranslationsControllerTest < ActionController::TestCase
   test "should have translation mode enabled by default" do
-    assert @controller.globalize?
+    assert @controller.in_place_translations?
   end
 
   test "routing" do
@@ -50,7 +50,11 @@ class AnApplicationControllerTest < ActionController::TestCase
   setup :load_translations
 
   test "should have translation mode enabled by default" do
-    assert @controller.globalize?
+    assert @controller.in_place_translations?
+  end
+
+  test "globalize? deprecation" do
+    assert_deprecated("You should use in_place_translations?"){ @controller.globalize? }
   end
 
   test "should return translated contents" do
@@ -63,7 +67,7 @@ class AnApplicationControllerTest < ActionController::TestCase
   end
 
   test "should always render the action" do
-    @controller.stubs(:globalize?).returns false
+    @controller.stubs(:in_place_translations?).returns false
 
     get :index, params
     assert_response :success

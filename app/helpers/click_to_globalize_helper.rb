@@ -3,7 +3,7 @@ module ClickToGlobalizeHelper
 
   # Render +app/views/shared/_click_to_globalize.html.erb+.
   def click_to_globalize
-    render :file => @@click_partial if globalize?
+    render :file => @@click_partial if in_place_translations?
   end
 
   # Get form_authenticity_token if the application is protected from forgery.
