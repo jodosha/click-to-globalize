@@ -7,5 +7,4 @@ end
 
 ActionView::Base.class_eval do
   include Click::Observer::View
-  include Click::Helper
 end

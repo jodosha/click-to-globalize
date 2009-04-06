@@ -13,3 +13,16 @@ class ActiveSupport::TestCase
       @locale_observer ||= Click::Observer::LocaleObserver.new
     end
 end
+
+class ActionView::TestCase
+  private
+    # HACK this is a placehoder, dunno why it isn't included by default
+    def protect_against_forgery?
+      false
+    end
+
+    # HACK this is a placehoder, dunno why it isn't included by default
+    def form_authenticity_token
+      "hack"
+    end
+end

@@ -93,43 +93,4 @@ module Click
       end
     end
   end
-
-  module Helper
-    @@click_partial = 'shared/_click_to_globalize'
-
-    # Render +app/views/shared/_click_to_globalize.html.erb+.
-    def click_to_globalize
-      render @@click_partial if controller.globalize?
-    end
-
-    # Get form_authenticity_token if the application is protected from forgery.
-    # See ActionController::RequestForgeryProtection for details.
-    def authenticity_token
-      protect_against_forgery? ? form_authenticity_token : ''
-    end
-
-    def locales
-      I18n.available_locales
-    end
-
-    # Creates the HTML markup for the languages picker menu.
-    #
-    # Example:
-    # I18n.available_locales # => [:en, :it]
-    # I18n.locale            # => :en
-    #
-    #   <ul>
-    #     <li><a href="/locales/set/en" title="* en">* en</a></li> |
-    #     <li><a href="/locales/set/it" title="it">it</a></li>
-    #   </ul>
-    def languages_menu
-      returning result = '<ul>' do
-        result << locales.map do |locale|
-          locale = "* #{locale}" if locale == I18n.locale
-          "<li>#{link_to locale, {:controller => 'locales', :action => 'set', :id => locale}, {:title => "#{language} [#{locale}]"}}</li>"
-        end * ' | '
-      end
-      result << '</ul>'
-    end
-  end
 end
