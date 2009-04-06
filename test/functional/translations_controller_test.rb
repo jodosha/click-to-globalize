@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../test_helper')
 
 TranslationsController.class_eval do
   before_filter do |controller|
-    controller.request.session[:__globalize_translations] = { "hello_world" => "Hello, World!" }
+    controller.request.session[:__translations] = { "hello_world" => "Hello, World!" }
   end
 end
 
@@ -79,6 +79,6 @@ class AnApplicationControllerTest < ActionController::TestCase
     end
 
     def translations
-      @request.session[:__globalize_translations]
+      @request.session[:__translations]
     end
 end

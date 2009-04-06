@@ -18,7 +18,7 @@ module Click
             @template.add_observer locale_observer
             render_without_observe(options, extra_options, &block)
             @template.remove_observer locale_observer
-            session[:__globalize_translations] = locale_observer.translations.stringify_keys
+            session[:__translations] = locale_observer.translations.stringify_keys
           end
       end
     end
