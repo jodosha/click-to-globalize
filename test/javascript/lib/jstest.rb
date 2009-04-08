@@ -14,6 +14,7 @@ ASSETS_PATH      = File.join(PLUGIN_ROOT, "assets")
 TEST_PATH        = File.join(PLUGIN_ROOT, "test", "javascript")
 TEST_ASSETS_PATH = File.join(TEST_PATH, "assets")
 TMP_TEST_PATH    = File.join(TEST_PATH, "tmp")
+FIXTURES_PATH    = File.join(TEST_PATH, "fixtures")
 
 class Browser
   def supported?; true; end
@@ -523,7 +524,7 @@ class TestCase
   end
 
   def html_fixtures
-    ""
+    File.new(File.join(FIXTURES_PATH, type, "#{title.gsub("_test", "")}_fixtures.html")).read
   end
 
   def exist?
