@@ -9,10 +9,11 @@ require 'fileutils'
 include FileUtils
 require 'erb'
 
-PLUGIN_ROOT   = File.expand_path(File.join(File.dirname(__FILE__), "..", "..", ".."))
-TEST_PATH     = File.join(PLUGIN_ROOT, "test", "javascript")
-ASSETS_PATH   = File.join(TEST_PATH, "assets")
-TMP_TEST_PATH = File.join(TEST_PATH, "tmp")
+PLUGIN_ROOT      = File.expand_path(File.join(File.dirname(__FILE__), "..", "..", ".."))
+ASSETS_PATH      = File.join(PLUGIN_ROOT, "assets")
+TEST_PATH        = File.join(PLUGIN_ROOT, "test", "javascript")
+TEST_ASSETS_PATH = File.join(TEST_PATH, "assets")
+TMP_TEST_PATH    = File.join(TEST_PATH, "tmp")
 
 class Browser
   def supported?; true; end
@@ -387,12 +388,13 @@ class ClickToGlobalizeJavaScriptTestTask < JavaScriptTestTask
     @test_builder.setup
   end
 
-  def mount_root
-    mount "/", ASSETS_PATH
+  def mount_assets
+    mount "/",       TEST_ASSETS_PATH
+    mount "/assets", ASSETS_PATH
   end
 
   def mount_test_paths
-    @server.mount "/test", NonCachingFileHandler, TMP_TEST_PATH
+    mount "/test", TMP_TEST_PATH
   end
 end
 
