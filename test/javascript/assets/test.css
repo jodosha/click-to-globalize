@@ -6,45 +6,85 @@ body {
   font-size:0.8em;
 }
 
+.navigation {
+  background: #9DC569;
+  color: #fff;
+}
+
+.navigation h1 {
+  font-size: 20px;
+}
+
+.navigation h2 {
+  font-size: 16px;
+  font-weight: normal;
+  margin: 0;
+  border: 1px solid #e8a400;
+  border-bottom: 0;
+  background: #ffc;
+  color: #E8A400;
+  padding: 8px;
+  padding-bottom: 0;
+}
+
+.navigation ul {
+  margin-top: 0;
+  border: 1px solid #E8A400;
+  border-top: none;
+  background: #ffc;
+  padding: 8px;
+  margin-left: 0;
+}
+
+.navigation ul li {
+  font-size: 12px;
+  list-style-type: none;
+  margin-top: 1px;
+  margin-bottom: 1px;
+  color: #555;
+}
+
+.navigation a {
+  color: #ffc;
+}
+
+.navigation ul li a {
+  color: #000;
+}
+
 #log {
   padding-bottom: 1em;
   border-bottom: 2px solid #000;
   margin-bottom: 2em;
 }
 
-.logsummary {
-  margin-top: 1em;
+#logsummary {
   margin-bottom: 1em;
   padding: 1ex;
   border: 1px solid #000;
   font-weight: bold;
 }
 
-.logtable {
+#logtable {
   width:100%;
   border-collapse: collapse;
   border: 1px dotted #666;
 }
 
-.logtable td, .logtable th {
+#logtable td, #logtable th {
   text-align: left;
   padding: 3px 8px;
   border: 1px dotted #666;
 }
 
-.logtable .passed {
+#logtable .passed {
   background-color: #cfc;
 }
 
-.logtable .failed, .logtable .error {
+#logtable .failed, #logtable .error {
   background-color: #fcc;
 }
 
-.logtable td div.action_buttons {
-  display: inline;
-}
-
-.logtable td div.action_buttons input {
-  margin: 0 5px;
-  font-size: 10px;
+#logtable .nameCell {
+  cursor: pointer;
 }

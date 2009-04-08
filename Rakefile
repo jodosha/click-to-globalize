@@ -49,8 +49,7 @@ namespace :test do
 
     t.load_tests(tests_to_run)
     t.prepare_tests
-    t.mount_assets
-    t.mount_test_paths
+    t.mount_paths
 
     %w( safari firefox ie konqueror opera ).each do |browser|
       t.browser(browser.to_sym) unless browsers_to_test && !browsers_to_test.include?(browser)

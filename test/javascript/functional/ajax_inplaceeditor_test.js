@@ -27,8 +27,8 @@ var TestUtil = {
   bindElement: function(id, text, selector) {
     text     = text || 'paragraph '+id;
     selector = selector || 'input[type~=text]';
-    ClickToGlobalize.DefaultOptions.translateUrl            = 'fixtures/translate_'+id+'.xml';
-    ClickToGlobalize.DefaultOptions.translateUnformattedUrl = 'fixtures/translate_unformatted_'+id+'.xml';
+    ClickToGlobalize.DefaultOptions.translateUrl            = '/fixtures/translate_'+id+'.xml';
+    ClickToGlobalize.DefaultOptions.translateUnformattedUrl = '/fixtures/translate_unformatted_'+id+'.xml';
     
     element = $$$(text).first();
 

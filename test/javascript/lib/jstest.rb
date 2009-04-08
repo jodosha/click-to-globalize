@@ -389,13 +389,11 @@ class ClickToGlobalizeJavaScriptTestTask < JavaScriptTestTask
     @test_builder.setup
   end
 
-  def mount_assets
-    mount "/",       TEST_ASSETS_PATH
-    mount "/assets", ASSETS_PATH
-  end
-
-  def mount_test_paths
-    mount "/test", TMP_TEST_PATH
+  def mount_paths
+    mount "/",      TEST_ASSETS_PATH
+    mount "/assets",     ASSETS_PATH
+    mount "/fixtures", FIXTURES_PATH
+    mount "/test",     TMP_TEST_PATH
   end
 end
 

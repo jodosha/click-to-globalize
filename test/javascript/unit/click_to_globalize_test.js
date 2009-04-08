@@ -24,7 +24,7 @@ new Test.Unit.Runner({
     authenticityToken = '45c0a7bf277d5e40d490438f41a67069e5334d96';
     requestForgeryProtectionToken = 'authenticity_token';
     clickToGlobalize  = new ClickToGlobalize(authenticityToken, requestForgeryProtectionToken, 
-      {translationsUrl: 'fixtures/translations.json'});
+      {translationsUrl: '/fixtures/translations.json'});
     document.fire("dom:loaded");
   },
   testRespondTo: function() {
