@@ -42,20 +42,15 @@ namespace :test do
     t.verbose = true
   end
 
-  # Taken from Prototype rake tasks.
   desc "Runs all the JavaScript unit tests and collects the results"
-  JavaScriptTestTask.new(:js) do |t|
+  ClickToGlobalizeJavaScriptTestTask.new(:js) do |t|
     tests_to_run     = ENV['TESTS']    && ENV['TESTS'].split(',')
     browsers_to_test = ENV['BROWSERS'] && ENV['BROWSERS'].split(',')
 
-    t.mount("/public", "#{rails_root}/public")
-    t.mount("/test", "test/javascript")
-
-    test_files = (Dir["test/javascript/unit/*.html"] + Dir["test/javascript/functional/*.html"])
-    test_files.sort.reverse.each do |test_file|
-      test_name = test_file[/.*\/(.+?)\.html/, 1]
-      t.run(test_file) unless tests_to_run && !tests_to_run.include?(test_name)
-    end
+    t.load_tests(tests_to_run)
+    t.prepare_tests
+    t.mount_root
+    t.mount_test_paths
 
     %w( safari firefox ie konqueror opera ).each do |browser|
       t.browser(browser.to_sym) unless browsers_to_test && !browsers_to_test.include?(browser)

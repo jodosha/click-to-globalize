@@ -1,9 +1,18 @@
+#
+# (c) 2005-2009 Prototype Team http://prototypejs.org
+#
+
 require 'rake/tasklib'
 require 'thread'
 require 'webrick'
 require 'fileutils'
 include FileUtils
 require 'erb'
+
+PLUGIN_ROOT   = File.expand_path(File.join(File.dirname(__FILE__), "..", "..", ".."))
+TEST_PATH     = File.join(PLUGIN_ROOT, "test", "javascript")
+ASSETS_PATH   = File.join(TEST_PATH, "assets")
+TMP_TEST_PATH = File.join(TEST_PATH, "tmp")
 
 class Browser
   def supported?; true; end
@@ -316,6 +325,7 @@ class JavaScriptTestTask < ::Rake::TaskLib
         end
       end
 
+      @test_builder.teardown
       @server.shutdown
       t.join
     end
@@ -338,7 +348,7 @@ class JavaScriptTestTask < ::Rake::TaskLib
   # {:url => "url", :testcases => "testFoo,testBar"}.
   # specifying :testcases is optional
   def run(url, testcases = :all)
-    @tests <<  { :url => url, :testcases => testcases }
+    @tests << { :url => url, :testcases => testcases }
   end
 
   def browser(browser)
@@ -359,6 +369,30 @@ class JavaScriptTestTask < ::Rake::TaskLib
       end
 
     @browsers<<browser
+  end
+end
+
+class ClickToGlobalizeJavaScriptTestTask < JavaScriptTestTask
+  def load_tests(test_cases)
+    test_cases ||= Dir["#{TEST_PATH}/../**/*_test.js"]
+    @test_cases = test_cases.map do |test_case|
+      test_case = TestCase.new(test_case)
+      raise "Unknown test #{test_case}." unless test_case.exist?
+      test_case
+    end
+  end
+
+  def prepare_tests
+    @test_builder = TestBuilder.new(self, @test_cases)
+    @test_builder.setup
+  end
+
+  def mount_root
+    mount "/", ASSETS_PATH
+  end
+
+  def mount_test_paths
+    @server.mount "/test", NonCachingFileHandler, TMP_TEST_PATH
   end
 end
 
@@ -427,43 +461,74 @@ class TestSuiteResults
 end
 
 class TestBuilder
-  UNITTEST_DIR = File.expand_path('test')
-  FIXTURES_DIR = File.join(UNITTEST_DIR, 'unit', 'fixtures')
-  TMP_DIR      = File.join(UNITTEST_DIR, 'unit', 'tmp')
-  TEMPLATE     = File.join(UNITTEST_DIR, 'lib', 'template.erb')
-  
-  def initialize(filename, template = TEMPLATE)
-    @filename          = filename
-    @template          = template
-    @js_filename       = File.basename(@filename)
-    @basename          = @js_filename.sub("_test.js", "")
+  TEMPLATE_PATH = File.join(TEST_PATH, "templates", "template.erb").freeze
+  attr_reader :test_task
+
+  def initialize(test_task, test_cases)
+    @test_task, @test_cases = test_task, test_cases
+    @template = ERB.new(File.new(TEMPLATE_PATH).read)
   end
-  
-  def html_fixtures
-    content = ""
-    file = File.join(FIXTURES_DIR, "#{@basename}.html")
-    File.open(file).each { |l| content << l } if File.exists?(file)
-    content
-  end
-  
-  def external_fixtures(extension)
-    filename = "#{@basename}.#{extension}"
-    File.exists?(File.join(FIXTURES_DIR, filename)) ? filename : nil
-  end
-  
-  def render
-    @title                 = @basename.gsub("_", " ").strip.capitalize
-    @html_fixtures         = html_fixtures
-    @js_fixtures_filename  = external_fixtures("js")
-    @css_fixtures_filename = external_fixtures("css")
-    
-    File.open(destination, "w+") do |file|
-      file << ERB.new(IO.read(@template), nil, "%").result(binding)
+
+  def setup
+    create_temp_test_path
+    @test_cases.each do |test_case|
+      @test_case = test_case
+      self.write_template
+      self.test_task.run test_case.url
     end
   end
-  
-  def destination
-    filename = File.basename(@filename, ".js")
-    File.join(TMP_DIR, "#{filename}.html")
+
+  def teardown
+    destroy_temp_test_path
+  end
+
+  def create_temp_test_path
+    destroy_temp_test_path
+    FileUtils.mkdir_p File.join(TMP_TEST_PATH, "unit")
+    FileUtils.mkdir_p File.join(TMP_TEST_PATH, "functional")
+  end
+
+  def destroy_temp_test_path
+    FileUtils.rm_rf(TMP_TEST_PATH) rescue nil
+  end
+
+  protected
+    def write_template
+      template_path = File.join(TMP_TEST_PATH, @test_case.type, "#{@test_case.title}.html")
+      File.open(template_path, 'w') { |f| f.write(@template.result(binding)) }
+    end
+end
+
+class TestCase
+  def initialize(path)
+    @path = path
+  end
+
+  def title
+    File.basename(@path, ".js")
+  end
+
+  def content
+    File.new(@path).read
+  end
+
+  def type
+    @path =~ /unit/ ? "unit" : "functional"
+  end
+
+  def url
+    "/test/#{type}/#{title}.html"
+  end
+
+  def html_fixtures
+    ""
+  end
+
+  def exist?
+    File.exist?(@path)
+  end
+
+  def to_s
+    name
   end
 end
