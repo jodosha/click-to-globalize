@@ -93,8 +93,8 @@ How To Contribute
 =================
 
 # Check out the code and test it:
-## git clone git://github.com/jodosha/click-to-globalize.git
-## rake click
+## @git clone git://github.com/jodosha/click-to-globalize.git@
+## @rake click@
 # Create a ticket to the "Sushistar Lighthouse page":http://sushistar.lighthouseapp.com
 # Create a patch and add as attachment to the ticket.
 
