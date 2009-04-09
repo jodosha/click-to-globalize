@@ -18,12 +18,12 @@ Getting Started
 ===============
 
 # Install Click to Globalize:
-  @script/plugin install git://github.com/jodosha/click-to-globalize.git@
-  @rake click:setup@
+## @script/plugin install git://github.com/jodosha/click-to-globalize.git@
+## @rake click:setup@
 # Add at the end of your layout the following code:
-  @<%= click_to_globalize -%>@
+## @<%= click_to_globalize -%>@
 # Put in your view:
-  @<%= t(:'hello_world') %>@
+## @<%= t(:'hello_world') %>@
 # Start your server and click to globalize.
 
 
@@ -82,7 +82,7 @@ Common Issues
 =============
 
 # Due to unobtrusive nature of the plugin, each page is parsed by javascript
-to find the right element and bind to it an Ajax.InPlaceEditor.
+to find the right element and bind to it an @Ajax.InPlaceEditor@.
 Be sure your (X)HTML is *wellformed*.
 
 NOTE: If you use the Rails scaffold system, Click to Globalize
@@ -93,8 +93,8 @@ How To Contribute
 =================
 
 # Check out the code and test it:
-git clone git://github.com/jodosha/click-to-globalize.git
-rake click
+## git clone git://github.com/jodosha/click-to-globalize.git
+## rake click
 # Create a ticket to the "Sushistar Lighthouse page":http://sushistar.lighthouseapp.com
 # Create a patch and add as attachment to the ticket.
 
