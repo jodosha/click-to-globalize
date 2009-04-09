@@ -79,6 +79,7 @@ module Click
       recipient.send :include, InstanceMethods
       recipient.class_eval do
         helper_method :in_place_translations?
+        helper :click_to_globalize, :locales # HACK they should be loaded by default by helper :all
       end
     end
 
