@@ -47,7 +47,7 @@ new Test.Unit.Runner({
     this.assertEqual(TestUtil.DefaultOptions, clickToGlobalize.options);
   },
   testGetTranslations: function() {
-    expected = $H({ hello_world: 'Hello World' });
+    expected = $H({ hello_world: "Hello World", hello_moon: "en, hello_moon" });
     this.assertEqual(expected.size(), clickToGlobalize.translations.size());
     expected.each(function(pair){
       this.assertEqual(pair.value, clickToGlobalize.translations.get(pair.key));

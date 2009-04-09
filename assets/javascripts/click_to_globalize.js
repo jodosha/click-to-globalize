@@ -67,6 +67,10 @@ var ClickToGlobalize = Class.create({
     new Ajax.Request(this.options.translationsUrl, {
       onSuccess: function(transport) {
         this.translations = $H(transport.responseText.evalJSON());
+        this.translations = this.translations.inject($H({}), function(result,pair){
+          result.set(pair.key, pair.value.stripTags());
+          return result;
+        });
       }.bind(this),
       method: 'get',
       // Set on false, cause we have to wait until the end of the request

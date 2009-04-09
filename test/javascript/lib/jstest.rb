@@ -271,6 +271,7 @@ class NonCachingFileHandler < WEBrick::HTTPServlet::FileHandler
       when /\.js$/   then 'text/javascript'
       when /\.html$/ then 'text/html'
       when /\.css$/  then 'text/css'
+      when /\.json$/ then 'application/json'
       else 'text/plain'
     end
   end
