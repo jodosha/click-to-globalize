@@ -1,8 +1,8 @@
 author: Luca Guidi
 email: guidi.luca@gmail.com
-homepage: http://lucaguidi.com/pages/click-to-globalize
+homepage: http://lucaguidi.com/projects/click-to-globalize
 summary: Globalization made easy with interface in place translations
-description: Click to Globalize is an extension for Globalize which allow in place translation for your views.
+description: "Click to Globalize is a Rails plugin, it allows to edit in place i18n labels."
 license: MIT
 rails_version: 1.2.3+
 version: 0.4.0
