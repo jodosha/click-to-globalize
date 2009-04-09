@@ -1,18 +1,13 @@
 var TestUtil = {
   DefaultOptions: {
-	  translateUrl:             '/locales/translate',
-	  translateUnformattedUrl:  '/locales/translate_unformatted',
-	  translationsUrl:          '/locales/translations',
-	  httpMethod:               'post',
-	  asynchronous:              true,
-	  textileElements:  [ 'a', 'acronym', 'blockquote', 'bold', 'cite', 'code',
-	                      'del', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'i',
-	                      'img', 'ins', 'span', 'strong', 'sub', 'sup', 'table',
-	                    ].collect(function(element){return element.toUpperCase();}),
-	  textArea:          {rows: 5, cols: 40},
-	  inputText:         {rows: 1, cols: 20},
-	  textLength:        160,
-	  clickToEditText:   'Click to globalize'
+	  translateUrl:    '/translations/save',
+	  translationsUrl: '/translations',
+	  httpMethod:      'post',
+	  asynchronous:    true,
+	  textArea:        {rows: 5, cols: 40},
+	  inputText:       {rows: 1, cols: 20},
+	  textLength:      160,
+	  clickToEditText: 'Click to globalize'
   },
   resetDefaultOptions: function(){
     ClickToGlobalize.DefaultOptions = this.DefaultOptions;
@@ -36,16 +31,27 @@ new Test.Unit.Runner({
   },
   testOptions: function() {
     TestUtil.resetDefaultOptions();
-    this.assertHashEqual(TestUtil.DefaultOptions, ClickToGlobalize.DefaultOptions);
+    this.assertEqual(TestUtil.DefaultOptions.translateUrl,    ClickToGlobalize.DefaultOptions.translateUrl);
+    this.assertEqual(TestUtil.DefaultOptions.translationsUrl, ClickToGlobalize.DefaultOptions.translationsUrl);
+    this.assertEqual(TestUtil.DefaultOptions.httpMethod,      ClickToGlobalize.DefaultOptions.httpMethod);
+    this.assertEqual(TestUtil.DefaultOptions.asynchronous,    ClickToGlobalize.DefaultOptions.asynchronous);
+    this.assertEqual(TestUtil.DefaultOptions.textArea,        ClickToGlobalize.DefaultOptions.textArea);
+    this.assertEqual(TestUtil.DefaultOptions.inputText,       ClickToGlobalize.DefaultOptions.inputText);
+    this.assertEqual(TestUtil.DefaultOptions.textLength,      ClickToGlobalize.DefaultOptions.textLength);
+    this.assertEqual(TestUtil.DefaultOptions.clickToEditText, ClickToGlobalize.DefaultOptions.clickToEditText);
   },
   testInitialize: function(){
     TestUtil.resetDefaultOptions();
     this.assertEqual(authenticityToken, clickToGlobalize.authenticityToken);
     this.assertEqual(requestForgeryProtectionToken, clickToGlobalize.requestForgeryProtectionToken);
-    this.assertHashEqual(TestUtil.DefaultOptions, clickToGlobalize.options);
+    this.assertEqual(TestUtil.DefaultOptions, clickToGlobalize.options);
   },
   testGetTranslations: function() {
-    this.assertHashEqual({hello_world: 'Hello World'}, clickToGlobalize.translations);
+    expected = $H({ hello_world: 'Hello World' });
+    this.assertEqual(expected.size(), clickToGlobalize.translations.size());
+    expected.each(function(pair){
+      this.assertEqual(pair.value, clickToGlobalize.translations.get(pair.key));
+    }.bind(this));
   },
   testCreateEditors: function() {
     this.assertEqual(TestUtil.DefaultOptions.clickToEditText, $('paragraph').getAttribute('title'));
@@ -59,7 +65,7 @@ new Test.Unit.Runner({
     ipe = new Ajax.InPlaceEditor(element, TestUtil.DefaultOptions.clickToEditText, {});
     clickToGlobalize.unbindEditor(element, ipe);
     Event.simulateMouse('paragraph3','click');
-    this.assertNullOrUndefined(ipe._form);
+    this.assertNull(ipe._form);
   },
   testProtectFromForgeryTokenParameter: function(){
     this.assertEqual('?'+requestForgeryProtectionToken+'='+authenticityToken,

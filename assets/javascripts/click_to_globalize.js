@@ -81,18 +81,10 @@ var ClickToGlobalize = Class.create({
       rows: size.rows,
       cols: size.cols,
       ajaxOptions: {method: this.options.httpMethod, asynchronous: this.options.asynchronous},
-      loadTextURL: this.options.translateUnformattedUrl+'?key='+encodeURIComponent(key)+this.protectFromForgeryTokenParameter('&'),
       clickToEditText: this.options.clickToEditText,
       onComplete: function(transport, element) {
-        if(transport){
+        if(transport) {
           this.unbindEditor(element);
-          if(this.options.textileElements.include(element.tagName)) {
-            parentElement = element.ancestors().first();
-            parentElement = this.options.textileElements.include(parentElement.tagName) ? parentElement : element;
-            html   = transport.responseText;
-            parentElement.replace(html);
-            element = $$$(html.stripTags()).first();
-          }
           this.bindEditor(element, key, transport.responseText);
         }
       }.bind(this)
@@ -114,18 +106,13 @@ var ClickToGlobalize = Class.create({
 
 Object.extend(ClickToGlobalize, {
   DefaultOptions: {
-	  translateUrl:             '/locales/translate',
-	  translateUnformattedUrl:  '/locales/translate_unformatted',
-	  translationsUrl:          '/locales/translations',
-	  httpMethod:               'post',
-	  asynchronous:              true,
-	  textileElements:  [ 'a', 'acronym', 'blockquote', 'bold', 'cite', 'code',
-	                      'del', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'i',
-	                      'img', 'ins', 'span', 'strong', 'sub', 'sup', 'table',
-	                    ].collect(function(element){return element.toUpperCase();}),
- 	  textArea:          {rows: 5, cols: 40},
- 	  inputText:         {rows: 1, cols: 20},
-	  textLength:        160,
-	  clickToEditText:   'Click to globalize'
+	  translateUrl:    '/translations/save',
+	  translationsUrl: '/translations',
+	  httpMethod:      'post',
+	  asynchronous:    true,
+ 	  textArea:        {rows: 5, cols: 40},
+ 	  inputText:       {rows: 1, cols: 20},
+	  textLength:      160,
+	  clickToEditText: 'Click to globalize'
   }
 });
