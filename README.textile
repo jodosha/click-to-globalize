@@ -18,12 +18,12 @@ Getting Started
 ===============
 
 # Install Click to Globalize:
-  script/plugin install git://github.com/jodosha/click-to-globalize.git
-  rake click:setup
+  @script/plugin install git://github.com/jodosha/click-to-globalize.git@
+  @rake click:setup@
 # Add at the end of your layout the following code:
-  <%= click_to_globalize -%>
+  @<%= click_to_globalize -%>@
 # Put in your view:
-  <%= t(:'hello_world') %>
+  @<%= t(:'hello_world') %>@
 # Start your server and click to globalize.
 
 
