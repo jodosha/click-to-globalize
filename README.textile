@@ -1,0 +1,110 @@
+Click to Globalize
+==================
+
+Click to Globalize is a Rails plugin, it allows to edit *in place* i18n labels.
+
+If you have a previous i18n experience, you probably noticed that the
+main problem of dedicated back-ends is the lack of the context where the
+string will be placed in. It isn't a trivial issue: you'll never know if the
+meaning of your string is harmonious with other labels and how your string will
+be rendered, until the page load.
+
+Now you can forget this issues, you can directly translate in place!!
+
+Check for news and tutorials at the "project home page":http://www.lucaguidi.com/projects/click-to-globalize.
+
+
+
+Getting Started
+===============
+
+#Install Click to Globalize:
+  @$ ./script/plugin install git://github.com/jodosha/click-to-globalize.git@
+  @rake click:setup@
+#Add at the end of your layout the following code:
+  <%= click_to_globalize -%>
+#Put in your view:
+  @<%= t(:'hello_world') %>@
+#Start your server and click to globalize.
+
+
+Prerequisites
+=============
+
+Click to Globalize is *framework agnostic*, it can talks with *all* the Rails
+plugins who speak the "i18n API":http://rails-i18n.org, but please make sure
+to use a *persistent* backend.
+In fact, the default i18n backend *shipped with Rails*, rely on YAML files, this
+means it doesn't allow runtime translations modifications.
+
+For this purpose, feel free to use my experimental "*globalize2* fork":http://github.com/jodosha/globalize2
+
+
+Features
+========
+
+#In place editing for each i18n string.
+#Easy and painless plug-in/plug-out process.
+#Unobtrusive Javascripts.
+#Auto transformation from input text to textarea for long strings.
+
+
+Advanced Features
+=================
+You may wish to restrict the access to Click to Globalize features, if you don't
+everyone can edit your pages.
+All you need to do is override the @in_place_translations?@ method.
+
+  class ApplicationController < ActionController::Base
+    def in_place_translations?
+      current_user.admin?
+    end
+  end
+   
+*NOTE:* The old @globalize?@ method has been deprecated.
+
+
+Uninstall
+=========
+
+@script/plugin remove click-to-globalize@
+
+
+Old Rails applications
+======================
+
+The current version of Click to Globalize targets Rails 2.3.x applications.
+If your application uses former version, please check the following branches:
+# "for-2.0":http://github.com/jodosha/click-to-globalize/tree/for-2.0
+# "for-2.1":http://github.com/jodosha/click-to-globalize/tree/for-2.1
+
+
+Common Issues
+=============
+
+#Due to unobtrusive nature of the plugin, each page is parsed by javascript
+to find the right element and bind to it an Ajax.InPlaceEditor.
+Be sure your (X)HTML is *wellformed*.
+
+NOTE: If you use the Rails scaffold system, Click to Globalize
+doesn't works. Cleanup the code before to use.
+  
+= Contribute
+
+* Check out the code and test it:
+  $ git clone git://github.com/jodosha/click-to-globalize.git
+  $ rake click
+
+* Create a ticket to the "Sushistar Lighthouse page":http://sushistar.lighthouseapp.com
+
+* Create a patch and add as attachment to the ticket.
+
+
+
+= Credits
+
+Javascript tests are based on Prototype[http://prototypejs.org] test libs.
+
+
+
+Copyright (c) 2007-2009 Luca Guidi - http://lucaguidi.com, released under the MIT license
