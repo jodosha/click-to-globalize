@@ -14,18 +14,17 @@ Now you can forget this issues, you can directly translate in place!!
 Check for news and tutorials at the "project home page":http://www.lucaguidi.com/projects/click-to-globalize.
 
 
-
 Getting Started
 ===============
 
-#Install Click to Globalize:
-  @$ ./script/plugin install git://github.com/jodosha/click-to-globalize.git@
-  @rake click:setup@
-#Add at the end of your layout the following code:
-  <%= click_to_globalize -%>
-#Put in your view:
-  @<%= t(:'hello_world') %>@
-#Start your server and click to globalize.
+# Install Click to Globalize:
+$ ./script/plugin install git://github.com/jodosha/click-to-globalize.git
+rake click:setup
+# Add at the end of your layout the following code:
+<%= click_to_globalize -%>
+# Put in your view:
+<%= t(:'hello_world') %>
+# Start your server and click to globalize.
 
 
 Prerequisites
@@ -43,10 +42,10 @@ For this purpose, feel free to use my experimental "*globalize2* fork":http://gi
 Features
 ========
 
-#In place editing for each i18n string.
-#Easy and painless plug-in/plug-out process.
-#Unobtrusive Javascripts.
-#Auto transformation from input text to textarea for long strings.
+# In place editing for each i18n string.
+# Easy and painless plug-in/plug-out process.
+# Unobtrusive Javascripts.
+# Auto transformation from input text to textarea for long strings.
 
 
 Advanced Features
@@ -82,29 +81,30 @@ If your application uses former version, please check the following branches:
 Common Issues
 =============
 
-#Due to unobtrusive nature of the plugin, each page is parsed by javascript
+# Due to unobtrusive nature of the plugin, each page is parsed by javascript
 to find the right element and bind to it an Ajax.InPlaceEditor.
 Be sure your (X)HTML is *wellformed*.
 
 NOTE: If you use the Rails scaffold system, Click to Globalize
 doesn't works. Cleanup the code before to use.
   
-= Contribute
 
-* Check out the code and test it:
-  $ git clone git://github.com/jodosha/click-to-globalize.git
-  $ rake click
+How To Contribute
+=================
 
-* Create a ticket to the "Sushistar Lighthouse page":http://sushistar.lighthouseapp.com
-
-* Create a patch and add as attachment to the ticket.
-
-
-
-= Credits
-
-Javascript tests are based on Prototype[http://prototypejs.org] test libs.
+# Check out the code and test it:
+git clone git://github.com/jodosha/click-to-globalize.git
+rake click
+# Create a ticket to the "Sushistar Lighthouse page":http://sushistar.lighthouseapp.com
+# Create a patch and add as attachment to the ticket.
 
 
+Credits
+=======
 
-Copyright (c) 2007-2009 Luca Guidi - http://lucaguidi.com, released under the MIT license
+Javascript tests are a custom implementation of the old "Prototype":http://prototypejs.org test libs.
+
+
+Copyright
+=========
+2007-2009 "Luca Guidi":http://lucaguidi.com, released under the *MIT license*
