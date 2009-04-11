@@ -5,4 +5,4 @@ summary: Globalization made easy with interface in place translations
 description: "Click to Globalize is a Rails plugin, it allows to edit in place i18n labels."
 license: MIT
 rails_version: 1.2.3+
-version: 0.4.0
+version: 0.5.0
